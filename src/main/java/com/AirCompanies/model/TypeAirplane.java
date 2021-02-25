@@ -1,4 +1,4 @@
 package com.AirCompanies.model;
 
-public enum Type {
+public enum TypeAirplane {
 }
