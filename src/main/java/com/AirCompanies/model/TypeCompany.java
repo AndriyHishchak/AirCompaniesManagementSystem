@@ -1,4 +1,5 @@
 package com.AirCompanies.model;
 
 public enum TypeCompany {
+    BUSINESS_AVIATION,NATIONAL_AIRLINE,CHARTER_FLIGHTS,REGIONAL_AIRLINES,LONG_ROAD_FLIGHTS
 }

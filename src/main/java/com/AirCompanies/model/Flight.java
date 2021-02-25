@@ -18,6 +18,7 @@ import java.util.Date;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Table(name = "flight")
 public class Flight extends BaseEntity {
+    @Enumerated(EnumType.STRING)
     @NotNull
     @Column(name = "status")
     Status status;
@@ -34,10 +35,12 @@ public class Flight extends BaseEntity {
     @OnDelete(action = OnDeleteAction.CASCADE)
     Airplane airplane;
 
+    @Enumerated(EnumType.STRING)
     @NotNull
     @Column(name = "departure_country")
     Country departureCountry;
 
+    @Enumerated(EnumType.STRING)
     @NotNull
     @Column(name = "destination_country")
     Country destinationCountry;
@@ -55,7 +58,7 @@ public class Flight extends BaseEntity {
     Date endedAt;
 
     @NotNull
-    @Column(name = "delay_started_at")
-    Date delayStartedAt;
+    @Column(name = "departure_at")
+    Date departureAt;
 
 }

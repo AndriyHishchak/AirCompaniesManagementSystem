@@ -23,7 +23,7 @@ public class FlightDto {
     long distance;
     LocalTime estimatedFlightTime;
     Date endedAt;
-    Date delayStartedAt;
+    Date departureAt;
 
     public static List<FlightDto> fromToFlight (List<Flight> flights) {
         return flights.stream().map(FlightDto::fromFlight).collect(Collectors.toList());
@@ -38,7 +38,7 @@ public class FlightDto {
                 .distance(flight.getDistance())
                 .estimatedFlightTime(flight.getEstimatedFlightTime())
                 .endedAt(flight.getEndedAt())
-                .delayStartedAt(flight.getDelayStartedAt())
+                .departureAt(flight.getDepartureAt())
                 .build();
     }
 }

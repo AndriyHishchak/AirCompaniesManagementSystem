@@ -45,6 +45,7 @@ public class Airplane extends BaseEntity{
     long fuelCapacity;
 
     @NotNull
+    @Enumerated(EnumType.STRING)
     @Column(name = "type")
     TypeAirplane typeAirplane;
 

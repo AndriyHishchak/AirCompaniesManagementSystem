@@ -4,7 +4,7 @@ create table air_company (
     created_at datetime(6) not null,
     updated_at datetime(6) not null,
     name varchar(255),
-    type integer,
+    type varchar(255),
     primary key (id)) engine=InnoDB;
 
 create table airplane (
@@ -16,7 +16,7 @@ create table airplane (
     fuel_capacity bigint,
     name varchar(255),
     number_of_flights integer,
-    type integer,
+    type varchar(255),
     air_company_id bigint not null,
     primary key (id)) engine=InnoDB;
 
@@ -24,13 +24,13 @@ create table flight (
     id bigint not null auto_increment,
     created_at datetime(6) not null,
     updated_at datetime(6) not null,
-    delay_started_at datetime(6),
-    departure_country integer,
-    destination_country integer,
+    departure_at datetime(6),
+    departure_country varchar(255),
+    destination_country varchar(255),
     distance bigint,
     ended_at datetime(6),
     estimated_flight_time time,
-    status integer,
+    status varchar(255),
     air_company_id bigint not null,
     airplane_id bigint not null,
     primary key (id)) engine=InnoDB;

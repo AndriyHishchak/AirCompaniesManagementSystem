@@ -19,6 +19,7 @@ public class AirCompany extends BaseEntity {
     @Column(name = "name")
     String name;
     @NotNull
+    @Enumerated(EnumType.STRING)
     @Column(name = "type")
     TypeCompany typeCompany;
     @NotNull
