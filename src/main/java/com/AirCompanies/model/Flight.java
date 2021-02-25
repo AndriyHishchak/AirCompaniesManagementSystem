@@ -26,13 +26,13 @@ public class Flight extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "airCompany_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    AirCompany airCompanyId;
+    AirCompany airCompany;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "airplane_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    Airplane airplaneId;
+    Airplane airplane;
 
     @NotNull
     @Column(name = "departure_country")

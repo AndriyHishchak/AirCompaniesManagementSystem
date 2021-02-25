@@ -6,10 +6,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.FieldDefaults;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
@@ -25,9 +22,9 @@ public class AirCompany extends BaseEntity {
     @Column(name = "type")
     TypeCompany typeCompany;
     @NotNull
-    @OneToMany(mappedBy = "airCompany")
+    @OneToMany(mappedBy = "airCompany",cascade= CascadeType.ALL, fetch = FetchType.LAZY)
     List<Airplane> airplanes;
     @NotNull
-    @OneToMany(mappedBy = "airCompany")
+    @OneToMany(mappedBy = "airCompany",cascade=CascadeType.ALL, fetch = FetchType.LAZY)
     List<Flight> flights;
 }

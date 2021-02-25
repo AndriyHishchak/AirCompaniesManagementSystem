@@ -30,7 +30,7 @@ public class Airplane extends BaseEntity{
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "airCompany_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    AirCompany airCompanyId;
+    AirCompany airCompany;
 
     @NotNull
     @Column(name = "number_of_flights")

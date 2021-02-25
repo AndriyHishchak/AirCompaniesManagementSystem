@@ -17,7 +17,7 @@ public class AirplaneDto {
     long id;
     String name;
     String factorySerialNumber;
-    AirCompany airCompanyId;
+    AirCompany airCompany;
     int numberOfFlights;
     long flightDistance;
     long fuelCapacity;
@@ -33,6 +33,7 @@ public class AirplaneDto {
                 .id(airplane.getId())
                 .name(airplane.getName())
                 .factorySerialNumber(airplane.getFactorySerialNumber())
+                .airCompany(airplane.getAirCompany())
                 .numberOfFlights(airplane.getNumberOfFlights())
                 .flightDistance(airplane.getFlightDistance())
                 .fuelCapacity(airplane.getFuelCapacity())

@@ -16,8 +16,8 @@ import java.util.stream.Collectors;
 public class FlightDto {
     long id;
     Status status;
-    AirCompany airCompanyId;
-    Airplane airplaneId;
+    AirCompany airCompany;
+    Airplane airplane;
     Country departureCountry;
     Country destinationCountry;
     long distance;
@@ -33,8 +33,8 @@ public class FlightDto {
         return FlightDto.builder()
                 .id(flight.getId())
                 .status(flight.getStatus())
-                .airCompanyId(flight.getAirCompanyId())
-                .airplaneId(flight.getAirplaneId())
+                .airCompany(flight.getAirCompany())
+                .airplane(flight.getAirplane())
                 .distance(flight.getDistance())
                 .estimatedFlightTime(flight.getEstimatedFlightTime())
                 .endedAt(flight.getEndedAt())
