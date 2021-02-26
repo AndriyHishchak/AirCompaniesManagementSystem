@@ -3,6 +3,8 @@ package com.AirCompanies.Dto;
 import com.AirCompanies.model.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
@@ -23,8 +25,8 @@ public class FlightDto {
     Country destinationCountry;
     long distance;
     LocalTime estimatedFlightTime;
-    Date endedAt;
-    Date departureAt;
+    LocalDateTime endedAt;
+    LocalDateTime  departureAt;
 
     public static List<FlightDto> fromToFlight (List<Flight> flights) {
         return flights.stream().map(FlightDto::fromFlight).collect(Collectors.toList());

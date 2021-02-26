@@ -42,7 +42,11 @@ public class FlightRestController {
     }
     @GetMapping("findByStatus")
     public List<FlightDto> findByFlightToStatus(@RequestParam(name = "status") String status) {
-        return flightService.findByFlightToStatus(status);
+        return flightService.findByFlightByStatus(status);
+    }
+    @GetMapping("RecentFlights")
+    public List<FlightDto> findByRecentFlights() {
+        return flightService.findByRecentFlights();
     }
 
     @PostMapping("create")

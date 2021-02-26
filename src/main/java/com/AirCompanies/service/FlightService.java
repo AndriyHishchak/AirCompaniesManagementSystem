@@ -17,5 +17,6 @@ public interface FlightService {
     void deleteFlight (Long id);
     void deleteAllFlight ();
 
-    List<FlightDto> findByFlightToStatus(String status);
+    List<FlightDto> findByFlightByStatus(String status);
+    List<FlightDto> findByRecentFlights();
 }

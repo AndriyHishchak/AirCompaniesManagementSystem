@@ -7,7 +7,11 @@ import com.AirCompanies.service.FlightService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.sql.Time;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -101,12 +105,43 @@ public class FlightServiceImpl implements FlightService {
         return flightRepository.save(flightRefresh);
     }
     @Override
-    public List<FlightDto> findByFlightToStatus(String status) {
+    public List<FlightDto> findByFlightByStatus(String status) {
         List<FlightDto> flightDtos = new ArrayList<>();
         List<Flight> flights = flightRepository.findAll().stream().filter( flight ->
                 flight.getStatus().equals(Status.valueOf(status.toUpperCase()))).collect(Collectors.toList());
         flights.forEach(flight -> flightDtos.add(FlightDto.fromFlight(flight)));
         log.info("IN getAll - {} flight found", flightDtos.size());
+        return flightDtos;
+    }
+
+    @Override
+    public List<FlightDto> findByRecentFlights() {
+
+        List<FlightDto> flightDtos = new ArrayList<>();
+        List<Flight> flights =
+                flightRepository.
+                        findAll().
+                         stream().
+                          filter(
+                            flight ->
+                               flight.getStatus().equals(Status.ACTIVE) &&
+                                       LocalDateTime.now().minusDays(1) >=  flight.getDepartureAt()
+                                  )
+                        .collect(Collectors.toList());
+
+        flights.forEach(flight -> flightDtos.add(FlightDto.fromFlight(flight)));
+        log.info("IN getAll - {} flight found", flightDtos.size());
+
+
+        System.out.println("this is at" + new Date());
+        System.out.println("this is hour hour " + new Date().getHours());
+        System.out.println("this is hour time " + new Date().getTime());
+        System.out.println("this is (-24 hour)" + (new Date().getHours() - 24));
+        System.out.println("this is (-1 day)" + (new Date().getDate() - 1));
+        System.out.println("this is getMinutes" + (new Date().getTime() - 86400));
+        System.out.println("this is LocalDateTime " + (LocalDateTime.now().minusDays(1).getSecond()));
+
+
         return flightDtos;
     }
 
