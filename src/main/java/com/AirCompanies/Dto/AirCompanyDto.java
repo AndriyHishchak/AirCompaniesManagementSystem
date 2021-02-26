@@ -1,6 +1,8 @@
 package com.AirCompanies.Dto;
 
 import com.AirCompanies.model.AirCompany;
+import com.AirCompanies.model.Airplane;
+import com.AirCompanies.model.Flight;
 import com.AirCompanies.model.TypeCompany;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -11,6 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
+
 public class AirCompanyDto {
     long id;
     String name;
@@ -19,8 +22,9 @@ public class AirCompanyDto {
     List<FlightDto> flights;
 
     public static AirCompanyDto fromAirCompany (AirCompany airCompany){
-        List<FlightDto> flightDtoList =  FlightDto.fromToFlight(airCompany.getFlights());
         List<AirplaneDto> airplaneDtoList =  AirplaneDto.fromToAirplane(airCompany.getAirplanes());
+        List<FlightDto> flightDtoList =  FlightDto.fromToFlight(airCompany.getFlights());
+
 
         return AirCompanyDto.builder()
                 .id(airCompany.getId())

@@ -1,5 +1,9 @@
 package com.AirCompanies.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.sun.istack.NotNull;
 import lombok.AccessLevel;
 import lombok.Data;
@@ -17,6 +21,8 @@ import java.util.UUID;
 @Entity
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Table(name = "airplane")
+@JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="id")
+@JsonIdentityReference(alwaysAsId=true)
 public class Airplane extends BaseEntity{
     @NotNull
     @Column(name = "name")
@@ -38,19 +44,32 @@ public class Airplane extends BaseEntity{
 
     @NotNull
     @Column(name = "flight_distance")
-    long flightDistance;
+    Double flightDistance;
 
     @NotNull
     @Column(name = "fuel_capacity")
-    long fuelCapacity;
+    Double fuelCapacity;
 
     @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name = "type")
     TypeAirplane typeAirplane;
 
+
     @OneToMany(mappedBy = "airplane")
     List<Flight> flights;
 
-
+    @Override
+    public String toString() {
+        return "Airplane{" +
+                "name='" + name + '\'' +
+                ", factorySerialNumber='" + factorySerialNumber + '\'' +
+                ", airCompany=" + airCompany +
+                ", numberOfFlights=" + numberOfFlights +
+                ", flightDistance=" + flightDistance +
+                ", fuelCapacity=" + fuelCapacity +
+                ", typeAirplane=" + typeAirplane +
+                ", flights=" + flights +
+                '}';
+    }
 }

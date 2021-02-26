@@ -5,7 +5,7 @@ values (1, '1980-12-09 00:00:00', '1980-12-09 00:00:00', 'Abelag' , 'BUSINESS_AV
        (3, '1970-02-01 00:00:00', '1970-02-01 00:00:00', 'Aigle Azur' , 'CHARTER_FLIGHTS' ),
        (4, '2019-08-09 00:00:00', '2019-08-09 00:00:00', 'Air Antwerp' , 'REGIONAL_AIRLINES' ),
        (5, '1986-11-01 00:00:00', '1986-11-01 00:00:00', 'Air Atlanta Icelandic' , 'CHARTER_FLIGHTS' ),
-       (6, '2016-12-09 00:00:00', '2016-12-09 00:00:00', 'Air Belgium' , 'LONG-LONG_ROAD_FLIGHTS' ),
+       (6, '2016-12-09 00:00:00', '2016-12-09 00:00:00', 'Air Belgium' , 'LONG_ROAD_FLIGHTS' ),
        (7, '1990-01-09 00:00:00', '1990-01-09 00:00:00', 'Air Corsica' , 'NATIONAL_AIRLINE' );
 
 INSERT INTO airplane (

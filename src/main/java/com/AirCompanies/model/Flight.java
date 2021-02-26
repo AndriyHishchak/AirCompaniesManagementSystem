@@ -1,5 +1,8 @@
 package com.AirCompanies.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.sun.istack.NotNull;
 import lombok.AccessLevel;
 import lombok.Data;
@@ -17,6 +20,8 @@ import java.util.Date;
 @Entity
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Table(name = "flight")
+@JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="id")
+@JsonIdentityReference(alwaysAsId=true)
 public class Flight extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @NotNull
@@ -61,4 +66,18 @@ public class Flight extends BaseEntity {
     @Column(name = "departure_at")
     Date departureAt;
 
+    @Override
+    public String toString() {
+        return "Flight{" +
+                "status=" + status +
+                ", airCompany=" + airCompany +
+                ", airplane=" + airplane +
+                ", departureCountry=" + departureCountry +
+                ", destinationCountry=" + destinationCountry +
+                ", distance=" + distance +
+                ", estimatedFlightTime=" + estimatedFlightTime +
+                ", endedAt=" + endedAt +
+                ", departureAt=" + departureAt +
+                '}';
+    }
 }

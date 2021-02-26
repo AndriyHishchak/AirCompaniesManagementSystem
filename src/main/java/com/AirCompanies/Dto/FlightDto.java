@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
+
 public class FlightDto {
     long id;
     Status status;
@@ -36,6 +37,8 @@ public class FlightDto {
                 .airCompany(flight.getAirCompany())
                 .airplane(flight.getAirplane())
                 .distance(flight.getDistance())
+                .departureCountry(flight.getDepartureCountry())
+                .destinationCountry(flight.getDestinationCountry())
                 .estimatedFlightTime(flight.getEstimatedFlightTime())
                 .endedAt(flight.getEndedAt())
                 .departureAt(flight.getDepartureAt())

@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface AirplaneRepository extends JpaRepository<Airplane,Long> {
+    Airplane findByFactorySerialNumber (String uuid);
+    Airplane findByName (String name);
 }
