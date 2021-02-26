@@ -69,7 +69,6 @@ public class Airplane extends BaseEntity{
                 ", flightDistance=" + flightDistance +
                 ", fuelCapacity=" + fuelCapacity +
                 ", typeAirplane=" + typeAirplane +
-                ", flights=" + flights +
                 '}';
     }
 }

@@ -40,8 +40,6 @@ public class AirCompany extends BaseEntity {
         return "AirCompany{" +
                 "name='" + name + '\'' +
                 ", typeCompany=" + typeCompany +
-                //", airplanes=" + airplanes +
-                //", flights=" + flights +
                 '}';
     }
 }

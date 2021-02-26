@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
+
 
 @Service
 @Slf4j
@@ -93,16 +93,16 @@ public class AirplaneServiceImpl implements AirplaneService {
         if(airplanePath.getName() !=null){
             airplaneRefresh.setName(airplanePath.getName());
         }
-        if(airplanePath.getTypeAirplane().equals(airplaneRefresh.getTypeAirplane()) ) {
+        if(!airplanePath.getTypeAirplane().equals(airplaneRefresh.getTypeAirplane()) ) {
             airplaneRefresh.setTypeAirplane(airplanePath.getTypeAirplane());
         }
         if(airplanePath.getNumberOfFlights() != airplaneRefresh.getNumberOfFlights() ) {
             airplaneRefresh.setNumberOfFlights(airplanePath.getNumberOfFlights());
         }
-        if(airplanePath.getFlightDistance() != airplaneRefresh.getFlightDistance() ) {
+        if(!airplanePath.getFlightDistance().equals(airplaneRefresh.getFlightDistance())) {
             airplaneRefresh.setFlightDistance(airplanePath.getFlightDistance());
         }
-        if(airplanePath.getFuelCapacity() != airplaneRefresh.getFuelCapacity() ) {
+        if(!airplanePath.getFuelCapacity().equals(airplaneRefresh.getFuelCapacity())) {
             airplaneRefresh.setFuelCapacity(airplanePath.getFuelCapacity());
         }
 

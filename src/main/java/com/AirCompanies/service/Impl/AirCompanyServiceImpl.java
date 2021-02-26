@@ -57,8 +57,8 @@ public class AirCompanyServiceImpl implements AirCompanyService {
     @Override
     public List<AirCompanyDto> getAll() {
         List<AirCompanyDto> airCompanyDtos = new ArrayList<>();
-        List<AirCompany> doctors = airCompanyRepository.findAll();
-        doctors.forEach(company -> airCompanyDtos.add(AirCompanyDto.fromAirCompany(company)));
+        List<AirCompany> airCompanies = airCompanyRepository.findAll();
+        airCompanies.forEach(company -> airCompanyDtos.add(AirCompanyDto.fromAirCompany(company)));
         log.info("IN getAll - {} company found", airCompanyDtos.size());
         return new ArrayList<>(airCompanyDtos);
     }
@@ -78,7 +78,7 @@ public class AirCompanyServiceImpl implements AirCompanyService {
         if(airCompanyPath.getName() !=null){
             airCompanyRefresh.setName(airCompanyPath.getName());
         }
-        if(airCompanyPath.getTypeCompany().equals(airCompanyRefresh.getTypeCompany()) ) {
+        if(!airCompanyPath.getTypeCompany().equals(airCompanyRefresh.getTypeCompany()) ) {
             airCompanyRefresh.setTypeCompany(airCompanyPath.getTypeCompany());
         }
 

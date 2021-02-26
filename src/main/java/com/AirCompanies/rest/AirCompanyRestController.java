@@ -26,7 +26,7 @@ public class AirCompanyRestController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<AirCompanyDto> getUserId(@PathVariable(name = "id") Long id) {
+    public ResponseEntity<AirCompanyDto> getById(@PathVariable(name = "id") Long id) {
         AirCompany airCompany = airCompanyService.findById(id);
 
         if(airCompany == null) {
