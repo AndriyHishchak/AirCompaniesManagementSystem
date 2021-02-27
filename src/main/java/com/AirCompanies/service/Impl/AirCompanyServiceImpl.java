@@ -9,6 +9,8 @@ import com.AirCompanies.service.AirCompanyService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.Clock;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -82,7 +84,7 @@ public class AirCompanyServiceImpl implements AirCompanyService {
             airCompanyRefresh.setTypeCompany(airCompanyPath.getTypeCompany());
         }
 
-        airCompanyRefresh.setUpdatedAt(new Date());
+        airCompanyRefresh.setUpdatedAt(LocalDateTime.now(Clock.systemDefaultZone()));
         log.info("IN update - AirCompany with id : {} ",id);
         return airCompanyRepository.save(airCompanyRefresh);
     }

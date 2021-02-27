@@ -8,8 +8,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.sql.Time;
+import java.time.Clock;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -100,15 +102,14 @@ public class FlightServiceImpl implements FlightService {
             flightRefresh.setEndedAt(flightPath.getEndedAt());
         }
 
-        flightRefresh.setUpdatedAt(new Date());
+        flightRefresh.setUpdatedAt(LocalDateTime.now(Clock.systemDefaultZone()));
         log.info("IN update - flight with id : {} ",id);
         return flightRepository.save(flightRefresh);
     }
     @Override
     public List<FlightDto> findByFlightByStatus(String status) {
         List<FlightDto> flightDtos = new ArrayList<>();
-        List<Flight> flights = flightRepository.findAll().stream().filter( flight ->
-                flight.getStatus().equals(Status.valueOf(status.toUpperCase()))).collect(Collectors.toList());
+        List<Flight> flights = flightRepository.findByStatus(Status.valueOf(status.toUpperCase()));
         flights.forEach(flight -> flightDtos.add(FlightDto.fromFlight(flight)));
         log.info("IN getAll - {} flight found", flightDtos.size());
         return flightDtos;
@@ -116,32 +117,13 @@ public class FlightServiceImpl implements FlightService {
 
     @Override
     public List<FlightDto> findByRecentFlights() {
-
         List<FlightDto> flightDtos = new ArrayList<>();
-        List<Flight> flights =
-                flightRepository.
-                        findAll().
-                         stream().
-                          filter(
-                            flight ->
-                               flight.getStatus().equals(Status.ACTIVE) &&
-                                       LocalDateTime.now().minusDays(1) >=  flight.getDepartureAt()
-                                  )
-                        .collect(Collectors.toList());
+
+        LocalDateTime yesterday = LocalDateTime.now(Clock.systemDefaultZone()).minusDays(1);
+        List<Flight> flights = flightRepository.findAllByStatusAndDepartureAtAfter(Status.ACTIVE,yesterday);
 
         flights.forEach(flight -> flightDtos.add(FlightDto.fromFlight(flight)));
-        log.info("IN getAll - {} flight found", flightDtos.size());
-
-
-        System.out.println("this is at" + new Date());
-        System.out.println("this is hour hour " + new Date().getHours());
-        System.out.println("this is hour time " + new Date().getTime());
-        System.out.println("this is (-24 hour)" + (new Date().getHours() - 24));
-        System.out.println("this is (-1 day)" + (new Date().getDate() - 1));
-        System.out.println("this is getMinutes" + (new Date().getTime() - 86400));
-        System.out.println("this is LocalDateTime " + (LocalDateTime.now().minusDays(1).getSecond()));
-
-
+        log.info("IN getAll - {} flight found at before {}", flightDtos.size(),yesterday);
         return flightDtos;
     }
 

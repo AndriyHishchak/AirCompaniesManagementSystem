@@ -53,19 +53,23 @@ public class Flight extends BaseEntity {
 
     @NotNull
     @Column(name = "distance")
-    long distance;
+    Double distance;
 
     @NotNull
-    @Column(name = "estimated_flight_time")
+    @Column(name = "estimated_flightTime", columnDefinition = "TIME")
     LocalTime estimatedFlightTime;
 
-    @NotNull
-    @Column(name = "ended_at")
+
+    @Column(name = "ended_at", columnDefinition = "TIMESTAMP")
     LocalDateTime  endedAt;
 
-    @NotNull
-    @Column(name = "departure_at")
+
+    @Column(name = "departure_at", columnDefinition = "TIMESTAMP")
     LocalDateTime departureAt;
+
+
+    @Column(name = "delay_start_at", columnDefinition = "TIME")
+    LocalTime delayStartAt;
 
     @Override
     public String toString() {

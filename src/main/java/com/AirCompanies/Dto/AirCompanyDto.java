@@ -15,7 +15,7 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 
 public class AirCompanyDto {
-    long id;
+    Long id;
     String name;
     TypeCompany typeCompany;
     List<AirplaneDto> airplanes;

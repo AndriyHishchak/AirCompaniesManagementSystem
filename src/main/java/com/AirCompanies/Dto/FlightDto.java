@@ -15,15 +15,14 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-
 public class FlightDto {
-    long id;
+    Long id;
     Status status;
     AirCompany airCompany;
     Airplane airplane;
     Country departureCountry;
     Country destinationCountry;
-    long distance;
+    Double distance;
     LocalTime estimatedFlightTime;
     LocalDateTime endedAt;
     LocalDateTime  departureAt;

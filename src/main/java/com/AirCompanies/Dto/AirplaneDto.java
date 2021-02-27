@@ -16,12 +16,12 @@ import java.util.stream.Collectors;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 
 public class AirplaneDto {
-    long id;
+    Long id;
     String name;
     TypeAirplane typeAirplane;
     String factorySerialNumber;
     AirCompany airCompany;
-    int numberOfFlights;
+    Integer numberOfFlights;
     Double flightDistance;
     Double fuelCapacity;
     List<FlightDto> flights;

@@ -40,7 +40,7 @@ public class Airplane extends BaseEntity{
 
     @NotNull
     @Column(name = "number_of_flights")
-    int numberOfFlights;
+    Integer numberOfFlights;
 
     @NotNull
     @Column(name = "flight_distance")

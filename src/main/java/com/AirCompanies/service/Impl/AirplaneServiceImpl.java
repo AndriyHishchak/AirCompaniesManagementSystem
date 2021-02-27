@@ -10,6 +10,8 @@ import com.AirCompanies.service.AirplaneService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.Clock;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -106,7 +108,7 @@ public class AirplaneServiceImpl implements AirplaneService {
             airplaneRefresh.setFuelCapacity(airplanePath.getFuelCapacity());
         }
 
-        airplaneRefresh.setUpdatedAt(new Date());
+        airplaneRefresh.setUpdatedAt(LocalDateTime.now(Clock.systemDefaultZone()));
         log.info("IN update - Airplane with id : {} ",id);
         return airplaneRepository.save(airplaneRefresh);
     }
