@@ -1,6 +1,7 @@
 package com.AirCompanies.rest;
 
 import com.AirCompanies.Dto.AirCompanyDto;
+import com.AirCompanies.exception.NotFoundException;
 import com.AirCompanies.model.AirCompany;
 import com.AirCompanies.service.Impl.AirCompanyServiceImpl;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -8,11 +9,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
-@RequestMapping("airCompany/")
+@RequestMapping("air-companies/")
 public class AirCompanyRestController {
 
     private final AirCompanyServiceImpl airCompanyService;
@@ -20,52 +23,33 @@ public class AirCompanyRestController {
     public AirCompanyRestController(AirCompanyServiceImpl airCompanyService) {
         this.airCompanyService = airCompanyService;
     }
-    @GetMapping("all")
-    public List<AirCompanyDto> getAll() {
-        return airCompanyService.getAll();
+    @GetMapping()
+    public List<AirCompanyDto> getAll(@RequestParam(value = "name",required = false) Optional <String> name ) {
+        return airCompanyService.getAll( name );
     }
 
     @GetMapping("{id}")
     public ResponseEntity<AirCompanyDto> getById(@PathVariable(name = "id") Long id) {
-        AirCompany airCompany = airCompanyService.findById(id);
-
-        if(airCompany == null) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        AirCompanyDto result = AirCompanyDto.fromAirCompany(airCompany);
-        return new ResponseEntity<>(result,HttpStatus.OK);
-    }
-    @GetMapping("name/{name}")
-    public ResponseEntity<AirCompanyDto> findByName(@PathVariable("name") String name){
-
-        AirCompany airCompany = airCompanyService.findByName(name);
-        AirCompanyDto result = AirCompanyDto.fromAirCompany(airCompany);
-        return new ResponseEntity<>(result, HttpStatus.OK);
-    }
-    @PostMapping("create")
-    public AirCompany registration(@RequestBody AirCompany airCompany){
-        airCompany.setAirplanes(null);
-        airCompany.setFlights(null);
-        AirCompany createdAirCompany = airCompanyService.create(airCompany);
-        //AirCompanyDto result = AirCompanyDto.fromAirCompany(createdAirCompany);
-        return createdAirCompany;
+        AirCompanyDto airCompany = airCompanyService.findById(id);
+        return new ResponseEntity<>(airCompany,HttpStatus.OK);
     }
 
-    @PatchMapping("{id}/update/typeCompany")
+    @PostMapping()
+    public ResponseEntity<?> registration(@RequestBody AirCompany airCompany){
+        AirCompanyDto company = airCompanyService.create(airCompany);
+        return ResponseEntity.created( URI.create("/air-companies/" + company.getId())).build();
+    }
+
+    //тут подумай як обєднати методи за допомогою  @RequestParam(value = "type",required = false
+    @PatchMapping("{id}/update/type")
     public ResponseEntity<AirCompanyDto> updateStatus(@PathVariable("id")Long id,
-                                                   @RequestParam("typeCompany") String typeCompany) {
-        AirCompany airCompanyUpdate = airCompanyService.updateTypeCompany(id, typeCompany);
-
-        AirCompanyDto result = AirCompanyDto.fromAirCompany(airCompanyUpdate);
-        return new ResponseEntity<>(result, HttpStatus.OK);
+                                                   @RequestParam(value = "type",required = false) String typeCompany) {
+        return new ResponseEntity<>(airCompanyService.updateTypeCompany(id, typeCompany), HttpStatus.OK);
     }
 
     @PatchMapping(path = "/{id}")
-    public ResponseEntity<AirCompanyDto> patchBook(@PathVariable("id")Long id,
-                          @RequestBody AirCompany airCompanyPath) {
-        AirCompany airCompanyUpdate = airCompanyService.update(id,airCompanyPath);
-        AirCompanyDto result = AirCompanyDto.fromAirCompany(airCompanyUpdate);
-        return new ResponseEntity<>(result, HttpStatus.OK);
+    public ResponseEntity<AirCompanyDto> update(@PathVariable("id")Long id, @RequestBody AirCompany airCompanyPath) {
+        return new ResponseEntity<>(airCompanyService.update(id,airCompanyPath), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
@@ -85,5 +69,11 @@ public class AirCompanyRestController {
         }catch (EmptyResultDataAccessException e){
             e.printStackTrace();
         }
+    }
+
+    @ExceptionHandler(value = NotFoundException.class)
+    public ResponseEntity<?> handlerNotFoundException (NotFoundException exception) {
+//                ResponseEntity.ok(exception.getMessage());
+        return (ResponseEntity<?>) ResponseEntity.notFound();
     }
 }

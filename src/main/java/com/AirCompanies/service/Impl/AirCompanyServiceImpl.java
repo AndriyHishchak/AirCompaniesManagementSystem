@@ -2,7 +2,11 @@ package com.AirCompanies.service.Impl;
 
 
 import com.AirCompanies.Dto.AirCompanyDto;
+import com.AirCompanies.Dto.AirplaneDto;
+import com.AirCompanies.exception.NotFoundException;
 import com.AirCompanies.model.AirCompany;
+import com.AirCompanies.model.Airplane;
+import com.AirCompanies.model.Flight;
 import com.AirCompanies.model.TypeCompany;
 import com.AirCompanies.repository.AirCompanyRepository;
 import com.AirCompanies.service.AirCompanyService;
@@ -12,8 +16,9 @@ import org.springframework.stereotype.Service;
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -27,38 +32,39 @@ public class AirCompanyServiceImpl implements AirCompanyService {
 
 
     @Override
-    public AirCompany create(AirCompany airCompany) {
+    public AirCompanyDto create(AirCompany airCompany) {
+        List <Airplane> airplanes = new ArrayList<>();
+        List <Flight> flights = new ArrayList<>();
+        airCompany.setAirplanes(airplanes);
+        airCompany.setFlights(flights);
         AirCompany airCompanySave = airCompanyRepository.save(airCompany);
+        AirCompanyDto  result = AirCompanyDto.fromAirCompany(airCompanySave);
         log.info("IN created - airCompany: {} successfully created", airCompanySave);
-        return airCompanySave;
+        return result;
     }
 
     @Override
-    public AirCompany findById(Long id) {
-        AirCompany airCompany = airCompanyRepository.findById(id).orElse(null);
+    public AirCompanyDto findById(Long id) {
+        AirCompany airCompany = airCompanyRepository.findById(id)
+                .orElseThrow( () -> new NotFoundException("Air Company not found"));
 
-        if (airCompany == null) {
-            log.warn("IN findByID - no airCompany found by id: {}",id);
-            return null;
-        }
         log.info("IN findByID - airCompany: {} find by id: {}", airCompany,id);
-        return airCompany;
+        return AirCompanyDto.fromAirCompany(airCompany);
     }
 
-    @Override
-    public AirCompany findByName(String name) {
-        AirCompany airCompany = airCompanyRepository.findByName(name);
-        if (airCompany == null) {
-            log.warn("IN findByName - no airCompany found by name: {}",name);
-            return null;
-        }
-        log.info("IN findByName - airCompany: {} find by name: {}", airCompany,name);
-        return airCompany;
-    }
+
 
     @Override
-    public List<AirCompanyDto> getAll() {
+    public List<AirCompanyDto> getAll(Optional<String> name) {
         List<AirCompanyDto> airCompanyDtos = new ArrayList<>();
+
+        if (name.isPresent()){
+            List<AirCompany> airCompany = Collections.singletonList(airCompanyRepository.findByName(name.get()));
+            airCompany.forEach(company -> airCompanyDtos.add(AirCompanyDto.fromAirCompany(company)));
+            log.info("IN findByName - airCompany: {} find by name: {}", airCompany,name);
+            return airCompanyDtos;
+        }
+
         List<AirCompany> airCompanies = airCompanyRepository.findAll();
         airCompanies.forEach(company -> airCompanyDtos.add(AirCompanyDto.fromAirCompany(company)));
         log.info("IN getAll - {} company found", airCompanyDtos.size());
@@ -66,15 +72,21 @@ public class AirCompanyServiceImpl implements AirCompanyService {
     }
 
     @Override
-    public AirCompany updateTypeCompany(Long id, String typeCompany) {
+    public AirCompanyDto updateTypeCompany(Long id, String typeCompany) {
+        airCompanyRepository.findById(id)
+                .orElseThrow( () -> new NotFoundException("Air Company not found"));
+
         AirCompany airCompany = airCompanyRepository.findById(id).get();
         airCompany.setTypeCompany(TypeCompany.valueOf(typeCompany.toUpperCase()));
+        airCompanyRepository.save(airCompany);
         log.info("IN update - AirCompany with id : {} ",id);
-        return airCompanyRepository.save(airCompany);
+        return AirCompanyDto.fromAirCompany(airCompany);
     }
 
     @Override
-    public AirCompany update(Long id,AirCompany airCompanyPath) {
+    public AirCompanyDto update(Long id,AirCompany airCompanyPath) {
+        airCompanyRepository.findById(id)
+                .orElseThrow( () -> new NotFoundException("Air Company not found"));
 
         AirCompany airCompanyRefresh = airCompanyRepository.findById(id).get();
         if(airCompanyPath.getName() !=null){
@@ -83,14 +95,19 @@ public class AirCompanyServiceImpl implements AirCompanyService {
         if(!airCompanyPath.getTypeCompany().equals(airCompanyRefresh.getTypeCompany()) ) {
             airCompanyRefresh.setTypeCompany(airCompanyPath.getTypeCompany());
         }
-
         airCompanyRefresh.setUpdatedAt(LocalDateTime.now(Clock.systemDefaultZone()));
+
+        airCompanyRepository.save(airCompanyRefresh);
+
+
         log.info("IN update - AirCompany with id : {} ",id);
-        return airCompanyRepository.save(airCompanyRefresh);
+        return AirCompanyDto.fromAirCompany(airCompanyRefresh);
     }
 
     @Override
     public void deleteAirCompany(Long id) {
+        airCompanyRepository.findById(id)
+                .orElseThrow( () -> new NotFoundException("Air Company not found"));
        airCompanyRepository.deleteById(id);
         log.info("IN delete - AirCompany with id : {} ",id);
     }
