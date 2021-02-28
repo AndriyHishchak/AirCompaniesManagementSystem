@@ -26,11 +26,11 @@ public class AirplaneServiceImpl implements AirplaneService {
     }
 
     @Override
-    public AirplaneDto create(Airplane airplane,AirCompany airCompany) {
+    public AirplaneDto create(Airplane airplane,Optional<AirCompany> airCompany) {
 
         List<Flight> flights = new ArrayList<>();
 
-        airplane.setAirCompany(airCompany);
+        airplane.setAirCompany(airCompany.get());
         airplane.setFlights(flights);
         Airplane airplaneSave = airplaneRepository.save(airplane);
         AirplaneDto result = AirplaneDto.fromAirplane(airplaneSave);

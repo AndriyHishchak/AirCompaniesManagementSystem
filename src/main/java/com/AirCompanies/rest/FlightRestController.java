@@ -37,8 +37,9 @@ public class FlightRestController {
     @GetMapping()
     public List<FlightDto> getAll(@RequestParam(value = "status",required = false) Optional<Status> status,
                                   @RequestParam(value = "destinationCountry",required = false) Optional<Country> destinationCountry,
-                                  @RequestParam(value = "departureCountry",required = false) Optional<Country> departureCountry) {
-        return flightService.getAll( status,departureCountry, destinationCountry);
+                                  @RequestParam(value = "departureCountry",required = false) Optional<Country> departureCountry,
+                                  @RequestParam(value = "nameCompany",required = false) Optional<String> nameCompany){
+        return flightService.getAll( status,departureCountry, destinationCountry,nameCompany);
     }
 
     @GetMapping("{id}")
@@ -57,10 +58,12 @@ public class FlightRestController {
                                                     @RequestParam(value = "distance",required = false) Optional<Double> distance,
                                                     @RequestParam(value = "estimatedFlightTime",required = false) Optional<LocalTime> estimatedFlightTime,
                                                     @RequestParam(value = "endedAt",required = false) Optional<LocalDateTime> endedAt,
-                                                    @RequestParam(value = "departureAt",required = false) Optional<LocalDateTime> departureAt,
-                                                    @RequestParam(value = "delayStartAt",required = false) Optional<LocalTime> delayStartAt){
+                                                    @RequestParam(value = "startedAt",required = false) Optional<LocalDateTime> StartedAt,
+                                                    @RequestParam(value = "delayStartAt",required = false) Optional<LocalDateTime> delayStartAt){
 
-        return new ResponseEntity<>(flightService.updateParametersFlight(id,status,airCompany,airplane,departureCountry,destinationCountry,distance,estimatedFlightTime,endedAt,departureAt,delayStartAt), HttpStatus.OK);
+        return new ResponseEntity<>(flightService.updateParametersFlight(id,
+                status,airCompany,airplane,departureCountry,destinationCountry,
+                distance,estimatedFlightTime,endedAt,StartedAt,delayStartAt), HttpStatus.OK);
     }
 
    /* @PutMapping("{id}")
@@ -73,6 +76,16 @@ public class FlightRestController {
     @GetMapping("RecentFlights")
     public List<FlightDto> findByRecentFlights() {
         return flightService.findByRecentFlights();
+    }
+
+    @GetMapping("completedFlights")
+    public List<FlightDto> findByCompletedFlights() {
+        return flightService.findByCompletedFlights();
+    }
+
+    @PatchMapping("/change/flight/status")
+    public List<FlightDto> changeFlightStatus() {
+        return flightService.changeFlightStatus();
     }
 
     @DeleteMapping("/{id}")

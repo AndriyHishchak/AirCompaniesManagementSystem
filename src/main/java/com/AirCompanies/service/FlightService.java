@@ -17,7 +17,8 @@ public interface FlightService {
 
     List<FlightDto> getAll(Optional <Status> status,
                            Optional <Country> departureCountry,
-                           Optional <Country> destinationCountry);
+                           Optional <Country> destinationCountry,
+                           Optional<String> nameCompany);
 
     FlightDto updateParametersFlight(Long id,
                                      Optional<Status> status,
@@ -28,9 +29,13 @@ public interface FlightService {
                                      Optional<Double> distance,
                                      Optional<LocalTime> estimatedFlightTime,
                                      Optional<LocalDateTime> endedAt,
-                                     Optional<LocalDateTime> departureAt,
-                                     Optional<LocalTime> delayStartAt);
+                                     Optional<LocalDateTime> StartedAt,
+                                     Optional<LocalDateTime> delayStartAt);
     void deleteFlight (Long id);
     void deleteAllFlight ();
+
+    List<FlightDto> changeFlightStatus();
+
+    List<FlightDto> findByCompletedFlights();
 }
 

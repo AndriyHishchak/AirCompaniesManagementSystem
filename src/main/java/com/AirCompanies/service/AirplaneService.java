@@ -11,7 +11,7 @@ import java.util.Optional;
 
 public interface AirplaneService {
 
-    AirplaneDto create (Airplane airplane,AirCompany airCompany);
+    AirplaneDto create (Airplane airplane,Optional<AirCompany> airCompany);
     AirplaneDto findById (Long id);
     List<AirplaneDto> getAll (Optional<String> name,
                               Optional<String> uuid);

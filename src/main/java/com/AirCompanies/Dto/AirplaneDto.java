@@ -6,6 +6,7 @@ import com.AirCompanies.model.TypeAirplane;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,7 +26,7 @@ public class AirplaneDto {
     Double flightDistance;
     Double fuelCapacity;
     List<FlightDto> flights;
-
+    LocalDateTime updateAt;
 
     public static List<AirplaneDto> fromToAirplane (List<Airplane> airplanes) {
         return airplanes.stream().map(AirplaneDto::fromAirplane).collect(Collectors.toList());
@@ -44,6 +45,7 @@ public class AirplaneDto {
                 .flightDistance(airplane.getFlightDistance())
                 .fuelCapacity(airplane.getFuelCapacity())
                 .flights(flightDtoList)
+                .updateAt(airplane.getUpdatedAt())
                 .build();
     }
 }

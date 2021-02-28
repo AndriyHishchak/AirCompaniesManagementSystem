@@ -32,9 +32,9 @@ public class Airplane extends BaseEntity{
     @Column(name = "factory_serial_number_uuid")
     String factorySerialNumber = UUID.randomUUID().toString();
 
-    @NotNull
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "airCompany_id", nullable = false)
+    @JoinColumn(name = "airCompany_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     AirCompany airCompany;
 

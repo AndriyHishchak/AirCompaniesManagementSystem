@@ -38,7 +38,7 @@ public class AirplaneRestController {
 
     @PostMapping()
     public ResponseEntity<?> registration (@RequestBody Airplane airplane,
-                                           @RequestParam(value = "airCompanyID") AirCompany airCompany){
+                                           @RequestParam(value = "airCompanyID") Optional<AirCompany> airCompany){
         AirplaneDto createdAirplane = airplaneService.create(airplane,airCompany);
         return ResponseEntity.created( URI.create("/airplanes/" + createdAirplane.getId())).build();
 

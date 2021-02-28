@@ -6,6 +6,8 @@ import com.AirCompanies.model.Flight;
 import com.AirCompanies.model.TypeCompany;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -20,6 +22,7 @@ public class AirCompanyDto {
     TypeCompany typeCompany;
     List<AirplaneDto> airplanes;
     List<FlightDto> flights;
+    LocalDateTime updateAt;
 
     public static AirCompanyDto fromAirCompany (AirCompany airCompany){
         List<AirplaneDto> airplaneDtoList =  AirplaneDto.fromToAirplane(airCompany.getAirplanes());
@@ -32,6 +35,7 @@ public class AirCompanyDto {
                 .typeCompany(airCompany.getTypeCompany())
                 .airplanes(airplaneDtoList)
                 .flights(flightDtoList)
+                .updateAt(airCompany.getUpdatedAt())
                 .build();
     }
 }

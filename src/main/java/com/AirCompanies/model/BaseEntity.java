@@ -20,7 +20,7 @@ import java.util.Date;
 
 @EntityListeners(AuditingEntityListener.class)
 @JsonIgnoreProperties(
-        value = {"createdAt", "updatedAt"},
+        value = {"createdAt"},
         allowGetters = true
 )
 @JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="id")

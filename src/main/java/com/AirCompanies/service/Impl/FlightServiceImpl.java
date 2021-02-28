@@ -12,6 +12,7 @@ import java.time.Clock;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -25,6 +26,7 @@ public class FlightServiceImpl implements FlightService {
 
     @Override
     public FlightDto create(Flight flight,AirCompany airCompany,Airplane airplane) {
+        flight.setStatus(Status.PENDING);
         flight.setAirCompany(airCompany);
         flight.setAirplane(airplane);
         Flight FlightSave = flightRepository.save(flight);
@@ -44,33 +46,50 @@ public class FlightServiceImpl implements FlightService {
 
     public List<FlightDto> getAll(Optional<Status> status,
                                   Optional<Country> departureCountry,
-                                  Optional<Country> destinationCountry) {
+                                  Optional<Country> destinationCountry,
+                                  Optional<String> nameCompany) {
         List<FlightDto> flightDtos = new ArrayList<>();
 
+        if (status.isPresent() && nameCompany.isPresent()) {
+            List<Flight> flights = flightRepository.findByAirCompany_NameAndStatus(nameCompany.get(),status.get());
+            flights.forEach(flight -> flightDtos.add(FlightDto.fromFlight(flight)));
+            log.info("IN findByAirCompany_NameAndStatus - flight: {} find by Status flight and Company: {}",status,nameCompany);
+            return new ArrayList<>(flightDtos);
+        }
         if (status.isPresent()) {
             List<Flight> flights = flightRepository.findByStatus(status.get());
             flights.forEach(flight -> flightDtos.add(FlightDto.fromFlight(flight)));
             log.info("IN findByStatus - flight: {} find by status: {}",flights,status);
-        return new ArrayList<>(flightDtos);
-        } else if (departureCountry.isPresent() && destinationCountry.isPresent()){
-            List<Flight> flights = flightRepository.findByDestinationCountryAndDepartureCountry(departureCountry.get(),destinationCountry.get());
-            flights.forEach(flight -> flightDtos.add(FlightDto.fromFlight(flight)));
-            log.info("IN findByDestinationCountryAndDepartureCountry - airCompany: {} find by Country: {}",flights,status);
-            return new ArrayList<>(flightDtos);
-        } else if (departureCountry.isPresent()) {
-            List<Flight> flights = flightRepository.findByDepartureCountry(departureCountry.get());
-            flights.forEach(flight -> flightDtos.add(FlightDto.fromFlight(flight)));
-            log.info("IN findByDepartureCountry - airCompany: {} find by Country: {}",flights,status);
-            return new ArrayList<>(flightDtos);
-        } else if (destinationCountry.isPresent()) {
-            List<Flight> flights = flightRepository.findByDestinationCountry(destinationCountry.get());
-            flights.forEach(flight -> flightDtos.add(FlightDto.fromFlight(flight)));
-            log.info("IN findByDestinationCountry - airCompany: {} find by Country: {}",flights,status);
             return new ArrayList<>(flightDtos);
         }
+        if (departureCountry.isPresent() && destinationCountry.isPresent()){
+            List<Flight> flights = flightRepository.findByDestinationCountryAndDepartureCountry(departureCountry.get(),destinationCountry.get());
+            flights.forEach(flight -> flightDtos.add(FlightDto.fromFlight(flight)));
+            log.info("IN findByDestinationCountryAndDepartureCountry - flight: {} find by Country: {}",flights,status);
+            return new ArrayList<>(flightDtos);
+        }
+        if (nameCompany.isPresent()) {
+            List<Flight> flights = flightRepository.findByAirCompany_Name(nameCompany.get());
+            flights.forEach(flight -> flightDtos.add(FlightDto.fromFlight(flight)));
+            log.info("IN findByAirCompany_Name - flight: {} find by Country: {}",flights,status);
+            return new ArrayList<>(flightDtos);
+        }
+        if (departureCountry.isPresent()) {
+            List<Flight> flights = flightRepository.findByDepartureCountry(departureCountry.get());
+            flights.forEach(flight -> flightDtos.add(FlightDto.fromFlight(flight)));
+            log.info("IN findByDepartureCountry - flight: {} find by Country: {}",flights,status);
+            return new ArrayList<>(flightDtos);
+        }
+        if (destinationCountry.isPresent()) {
+            List<Flight> flights = flightRepository.findByDestinationCountry(destinationCountry.get());
+            flights.forEach(flight -> flightDtos.add(FlightDto.fromFlight(flight)));
+            log.info("IN findByDestinationCountry - flight: {} find by Country: {}",flights,status);
+            return new ArrayList<>(flightDtos);
+        }
+
         List<Flight> flightDtoList = flightRepository.findAll();
-        flightDtoList.forEach(company -> flightDtos.add(FlightDto.fromFlight(company)));
-        log.info("IN getAll - {} company found", flightDtos.size());
+        flightDtoList.forEach(flight -> flightDtos.add(FlightDto.fromFlight(flight)));
+        log.info("IN getAll - {} flight found", flightDtos.size());
         return new ArrayList<>(flightDtos);
 
     }
@@ -85,8 +104,8 @@ public class FlightServiceImpl implements FlightService {
                                          Optional<Double> distance,
                                          Optional<LocalTime> estimatedFlightTime,
                                          Optional<LocalDateTime> endedAt,
-                                         Optional<LocalDateTime> departureAt,
-                                         Optional<LocalTime> delayStartAt) {
+                                         Optional<LocalDateTime> startedAt,
+                                         Optional<LocalDateTime> delayStartAt) {
 
         Flight flight = flightRepository.findById(id)
                 .orElseThrow( () -> new NotFoundException("Flight not found"));
@@ -122,9 +141,9 @@ public class FlightServiceImpl implements FlightService {
             flight.setEndedAt(endedAt.get());
             log.info("IN update endedAt Flight - Flight with id : {} ", id);
         }
-        if (departureAt.isPresent()) {
-            flight.setDepartureAt(departureAt.get());
-            log.info("IN update departureAt Flight - Flight with id : {} ", id);
+        if (startedAt.isPresent()) {
+            flight.setStartedAt(startedAt.get());
+            log.info("IN update StartedAt Flight - Flight with id : {} ", id);
         }
         if (delayStartAt.isPresent()) {
             flight.setDelayStartAt(delayStartAt.get());
@@ -155,8 +174,8 @@ public class FlightServiceImpl implements FlightService {
 //        if(flightPath.getEstimatedFlightTime() != (flightRefresh.getEstimatedFlightTime()) ) {
 //            flightRefresh.setEstimatedFlightTime(flightPath.getEstimatedFlightTime());
 //        }
-//        if(flightPath.getDepartureAt() != (flightRefresh.getDepartureAt()) ) {
-//            flightRefresh.setDepartureAt(flightPath.getDepartureAt());
+//        if(flightPath.getStartedAt() != (flightRefresh.getStartedAt()) ) {
+//            flightRefresh.setStartedAt(flightPath.getStartedAt());
 //        }
 //        if(flightPath.getEndedAt() != (flightRefresh.getEndedAt()) ) {
 //            flightRefresh.setEndedAt(flightPath.getEndedAt());
@@ -170,11 +189,46 @@ public class FlightServiceImpl implements FlightService {
 
 
     @Override
+    public List<FlightDto> changeFlightStatus() {
+
+        List<Flight> flights = flightRepository.findAll();
+
+        flights.forEach(flight -> {
+
+            if (flight.getStatus().equals(Status.PENDING)) {
+//                flight.setStatus(Status.ACTIVE);
+                flight.setDelayStartAt(flight.getCreatedAt()); }
+
+            if (flight.getStatus().equals(Status.ACTIVE)) {
+//                flight.setStatus(Status.COMPLETED);
+                flight.setStartedAt(flight.getCreatedAt().plusHours(1)); }
+
+            if (flight.getStatus().equals(Status.COMPLETED)) {
+                flight.setEndedAt(flight.getStartedAt()
+                        .plusHours(flight.getEstimatedFlightTime().getHour())
+                        .plusMinutes(flight.getEstimatedFlightTime().getMinute())
+                        .plusSeconds(flight.getEstimatedFlightTime().getSecond()));
+            }
+            flight.setUpdatedAt(LocalDateTime.now(Clock.systemDefaultZone()));
+        });
+        return FlightDto.fromToFlight(flightRepository.saveAll(flights));
+    }
+
+    @Override
+    public List<FlightDto> findByCompletedFlights() {
+        List<FlightDto> flightDtos = new ArrayList<>();
+        List<Flight> flights = flightRepository.findByCompletedFlights();
+        flights.forEach(flight -> flightDtos.add(FlightDto.fromFlight(flight)));
+        log.info("IN getAll - {} flight found", flightDtos.size());
+        return new ArrayList<>(flightDtos);
+    }
+
+    @Override
     public List<FlightDto> findByRecentFlights() {
         List<FlightDto> flightDtos = new ArrayList<>();
 
         LocalDateTime yesterday = LocalDateTime.now(Clock.systemDefaultZone()).minusDays(1);
-        List<Flight> flights = flightRepository.findAllByStatusAndDepartureAtAfter(Status.ACTIVE,yesterday);
+        List<Flight> flights = flightRepository.findAllByStatusAndStartedAtAfter(Status.ACTIVE,yesterday);
 
         flights.forEach(flight -> flightDtos.add(FlightDto.fromFlight(flight)));
         log.info("IN getAll - {} flight found at before {}", flightDtos.size(),yesterday);
@@ -195,6 +249,8 @@ public class FlightServiceImpl implements FlightService {
         flightRepository.deleteAll();
         log.info("IN deleted All Flight");
     }
+
+
 
 
 }

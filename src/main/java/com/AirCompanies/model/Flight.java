@@ -64,12 +64,12 @@ public class Flight extends BaseEntity {
     LocalDateTime  endedAt;
 
 
-    @Column(name = "departure_at", columnDefinition = "TIMESTAMP")
-    LocalDateTime departureAt;
+    @Column(name = "started_at", columnDefinition = "TIMESTAMP")
+    LocalDateTime startedAt;
 
 
-    @Column(name = "delay_start_at", columnDefinition = "TIME")
-    LocalTime delayStartAt;
+    @Column(name = "delay_start_at", columnDefinition = "TIMESTAMP")
+    LocalDateTime delayStartAt;
 
     @Override
     public String toString() {
@@ -82,7 +82,7 @@ public class Flight extends BaseEntity {
                 ", distance=" + distance +
                 ", estimatedFlightTime=" + estimatedFlightTime +
                 ", endedAt=" + endedAt +
-                ", departureAt=" + departureAt +
+                ", StartedAt=" + startedAt +
                 '}';
     }
 }

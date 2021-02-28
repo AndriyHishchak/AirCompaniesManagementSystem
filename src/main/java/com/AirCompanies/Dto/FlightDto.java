@@ -25,7 +25,9 @@ public class FlightDto {
     Double distance;
     LocalTime estimatedFlightTime;
     LocalDateTime endedAt;
-    LocalDateTime  departureAt;
+    LocalDateTime  startedAt;
+    LocalDateTime  updateAt;
+
 
     public static List<FlightDto> fromToFlight (List<Flight> flights) {
         return flights.stream().map(FlightDto::fromFlight).collect(Collectors.toList());
@@ -42,7 +44,8 @@ public class FlightDto {
                 .distance(flight.getDistance())
                 .estimatedFlightTime(flight.getEstimatedFlightTime())
                 .endedAt(flight.getEndedAt())
-                .departureAt(flight.getDepartureAt())
+                .startedAt(flight.getStartedAt())
+                .updateAt(flight.getUpdatedAt())
                 .build();
     }
 }
