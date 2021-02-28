@@ -30,8 +30,7 @@ public class AirCompanyRestController {
 
     @GetMapping("{id}")
     public ResponseEntity<AirCompanyDto> getById(@PathVariable(name = "id") Long id) {
-        AirCompanyDto airCompany = airCompanyService.findById(id);
-        return new ResponseEntity<>(airCompany,HttpStatus.OK);
+        return new ResponseEntity<>(airCompanyService.findById(id),HttpStatus.OK);
     }
 
     @PostMapping()
@@ -40,35 +39,28 @@ public class AirCompanyRestController {
         return ResponseEntity.created( URI.create("/air-companies/" + company.getId())).build();
     }
 
-    //тут подумай як обєднати методи за допомогою  @RequestParam(value = "type",required = false
-    @PatchMapping("{id}/update/type")
+
+    @PatchMapping("{id}/update/parameter")
     public ResponseEntity<AirCompanyDto> updateStatus(@PathVariable("id")Long id,
-                                                   @RequestParam(value = "type",required = false) String typeCompany) {
-        return new ResponseEntity<>(airCompanyService.updateTypeCompany(id, typeCompany), HttpStatus.OK);
+                                                   @RequestParam(value = "type",required = false) String typeCompany,
+                                                   @RequestParam(value = "name",required = false) Optional<String> name) {
+        return new ResponseEntity<>(airCompanyService.updateTypeCompany(id, typeCompany,name), HttpStatus.OK);
     }
 
-    @PatchMapping(path = "/{id}")
-    public ResponseEntity<AirCompanyDto> update(@PathVariable("id")Long id, @RequestBody AirCompany airCompanyPath) {
-        return new ResponseEntity<>(airCompanyService.update(id,airCompanyPath), HttpStatus.OK);
-    }
+//    @PutMapping("/{id}")
+//    public ResponseEntity<AirCompanyDto> update(@PathVariable("id")Long id, @RequestBody AirCompany airCompanyRefresh) {
+//        return new ResponseEntity<>(airCompanyService.update(id,airCompanyRefresh), HttpStatus.OK);
+//    }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
     public void deleteById(@PathVariable("id") Long id){
-        try {
             airCompanyService.deleteAirCompany(id);
-        }catch (EmptyResultDataAccessException e){
-            e.printStackTrace();
-        }
     }
     @DeleteMapping("/all")
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
     public void deleteAll(){
-        try {
             airCompanyService.deleteAllAirCompany();
-        }catch (EmptyResultDataAccessException e){
-            e.printStackTrace();
-        }
     }
 
     @ExceptionHandler(value = NotFoundException.class)

@@ -2,8 +2,10 @@ package com.AirCompanies.service.Impl;
 
 
 import com.AirCompanies.Dto.AirplaneDto;
+import com.AirCompanies.exception.NotFoundException;
 import com.AirCompanies.model.AirCompany;
 import com.AirCompanies.model.Airplane;
+import com.AirCompanies.model.Flight;
 import com.AirCompanies.model.TypeAirplane;
 import com.AirCompanies.repository.AirplaneRepository;
 import com.AirCompanies.service.AirplaneService;
@@ -12,9 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 
 @Service
@@ -28,77 +28,92 @@ public class AirplaneServiceImpl implements AirplaneService {
     }
 
     @Override
-    public Airplane create(Airplane airplane) {
+    public AirplaneDto create(Airplane airplane,AirCompany airCompany) {
+
+        List<Flight> flights = new ArrayList<>();
+
+        airplane.setAirCompany(airCompany);
+        airplane.setFlights(flights);
         Airplane airplaneSave = airplaneRepository.save(airplane);
-        log.info("IN created - airplane : {} successfully created", airplaneSave);
-        return airplaneSave;
+        AirplaneDto result = AirplaneDto.fromAirplane(airplaneSave);
+        log.info("IN created - airplane : {} successfully created", result);
+        return result;
     }
-    public Airplane findByUuid(String uuid) {
-        Airplane airplane = airplaneRepository.findByFactorySerialNumber(uuid);
-        log.info("IN findByUuid - airplane: {} find by UUID: {}",airplane,uuid);
-        return airplane;
-    }
-    @Override
-    public Airplane findById(Long id) {
-        Airplane airplane = airplaneRepository.findById(id).orElse(null);
 
-        if (airplane == null) {
-            log.warn("IN findByID - no Airplane found by id: {}",id);
-            return null;
-        }
+
+
+    @Override
+    public AirplaneDto findById(Long id) {
+        Airplane airplane = airplaneRepository.findById(id)
+                .orElseThrow( () -> new NotFoundException("Airplane not found"));
+
         log.info("IN findByID - Airplane: {} find by id: {}", airplane,id);
-        return airplane;
+        return AirplaneDto.fromAirplane(airplane);
     }
 
     @Override
-    public Airplane findByName(String name) {
-        Airplane airplane = airplaneRepository.findByName(name);
-        if (airplane == null) {
-            log.warn("IN findByName - no airplane found by name: {}",name);
-            return null;
+    public List<AirplaneDto> getAll(Optional<String> name,
+                                    Optional<String> uuid) {
+        List<AirplaneDto> airplaneDtos = new ArrayList<>();
+
+        if (name.isPresent()){
+            List <Airplane> airCompanies = Collections.singletonList(airplaneRepository.findByName( name.get() ));
+            airCompanies.forEach(airplane -> airplaneDtos.add(AirplaneDto.fromAirplane(airplane)));
+            log.info("IN findByName - airplane: {} find by name: {}", airCompanies,name);
+        } else if (uuid.isPresent()) {
+            List <Airplane> airCompanies = Collections.singletonList(airplaneRepository.findByFactorySerialNumber( uuid.get() ));
+            airCompanies.forEach(airplane -> airplaneDtos.add(AirplaneDto.fromAirplane(airplane)));
+            log.info("IN findByFactorySerialNumber - airplane: {} find by SerialNumber: {}", airCompanies,name);
         }
-        log.info("IN findByName - airplane: {} find by name: {}", airplane,name);
-        return airplane;
-    }
-
-
-
-    @Override
-    public List<AirplaneDto> getAll() {
-        List<AirplaneDto> airplaneDtoList = new ArrayList<>();
         List<Airplane> airplanes = airplaneRepository.findAll();
-        airplanes.forEach(airplane -> airplaneDtoList.add(AirplaneDto.fromAirplane(airplane)));
-        log.info("IN getAll - {} airplanes found", airplaneDtoList.size());
-        return new ArrayList<>(airplaneDtoList);
+        airplanes.forEach(airplane -> airplaneDtos.add(AirplaneDto.fromAirplane(airplane)));
+        log.info("IN getAll - {} airplanes found", airplaneDtos.size());
+        return new ArrayList<>(airplaneDtos);
+    }
+    @Override
+    public AirplaneDto updateParameterAirplane(Long id,
+                                       Optional<AirCompany> airCompany,
+                                       Optional<TypeAirplane> typeAirplane,
+                                       Optional<String> name,
+                                       Optional<Integer> numberOfFlights,
+                                       Optional<Double> flightDistance,
+                                       Optional<Double> fuelCapacity) {
+        Airplane airplane = airplaneRepository.findById(id)
+                .orElseThrow( () -> new NotFoundException("Airplane not found"));
+        if (name.isPresent()) {
+            airplane.setName(name.get());
+            log.info("IN update Name Airplane - Airplane with id : {} to Company  {} ", id, airCompany);}
+        if (airCompany.isPresent()) {
+            airplane.setAirCompany(airCompany.get());
+            log.info("IN update AirCompany Airplane - Airplane with id : {} ", id);}
+        if ( typeAirplane.isPresent()) {
+            airplane.setTypeAirplane(typeAirplane.get());
+            log.info("IN update Type Airplane Airplane - Airplane with id : {} ", id);}
+        if (numberOfFlights.isPresent()) {
+            airplane.setNumberOfFlights(numberOfFlights.get());
+            log.info("IN update Number Of Flights Airplane - Airplane with id : {} ", id);}
+        if (flightDistance.isPresent()) {
+            airplane.setFlightDistance(flightDistance.get());
+            log.info("IN update Flight Distance Airplane - Airplane with id : {} ", id);}
+        if (fuelCapacity.isPresent()) {
+            airplane.setFuelCapacity(fuelCapacity.get());
+            log.info("IN update Fuel Capacity Airplane - Airplane with id : {} ", id);}
+        log.info("IN finish update - Airplane with id : {} ",id);
+        return AirplaneDto.fromAirplane(airplaneRepository.save(airplane));
     }
 
     @Override
-    public Airplane updateTypeAirplane(Long id, String typeAirplane) {
-        Airplane airplane = airplaneRepository.findById(id).get();
-        airplane.setTypeAirplane(TypeAirplane.valueOf(typeAirplane.toUpperCase()));
-        log.info("IN update - AirCompany with id : {} ",id);
-        return airplaneRepository.save(airplane);
-    }
+    public AirplaneDto update(Long id,Airplane airplanePath) {
+        Airplane airplaneRefresh = airplaneRepository.findById(id)
+                .orElseThrow( () -> new NotFoundException("Airplane not found"));
 
-    @Override
-    public Airplane updateCompany(Long id, AirCompany airCompany) {
-        Airplane airplaneUpdate = airplaneRepository.findById(id).get();
-        airplaneUpdate.setAirCompany(airCompany);
-        airplaneRepository.save(airplaneUpdate);
-        return airplaneUpdate;
-    }
-
-    @Override
-    public Airplane update(Long id,Airplane airplanePath) {
-
-        Airplane airplaneRefresh = airplaneRepository.findById(id).get();
         if(airplanePath.getName() !=null){
             airplaneRefresh.setName(airplanePath.getName());
         }
         if(!airplanePath.getTypeAirplane().equals(airplaneRefresh.getTypeAirplane()) ) {
             airplaneRefresh.setTypeAirplane(airplanePath.getTypeAirplane());
         }
-        if(airplanePath.getNumberOfFlights() != airplaneRefresh.getNumberOfFlights() ) {
+        if(!airplanePath.getNumberOfFlights().equals(airplaneRefresh.getNumberOfFlights())) {
             airplaneRefresh.setNumberOfFlights(airplanePath.getNumberOfFlights());
         }
         if(!airplanePath.getFlightDistance().equals(airplaneRefresh.getFlightDistance())) {
@@ -107,14 +122,16 @@ public class AirplaneServiceImpl implements AirplaneService {
         if(!airplanePath.getFuelCapacity().equals(airplaneRefresh.getFuelCapacity())) {
             airplaneRefresh.setFuelCapacity(airplanePath.getFuelCapacity());
         }
-
         airplaneRefresh.setUpdatedAt(LocalDateTime.now(Clock.systemDefaultZone()));
+        airplaneRepository.save(airplaneRefresh);
         log.info("IN update - Airplane with id : {} ",id);
-        return airplaneRepository.save(airplaneRefresh);
+        return AirplaneDto.fromAirplane(airplaneRefresh);
     }
 
     @Override
     public void deleteAirplane(Long id) {
+        airplaneRepository.findById(id)
+                .orElseThrow( () -> new NotFoundException("Airplane not found"));
         airplaneRepository.deleteById(id);
         log.info("IN delete - Airplane with id : {} ",id);
     }
@@ -124,4 +141,5 @@ public class AirplaneServiceImpl implements AirplaneService {
         airplaneRepository.deleteAll();
         log.info("IN deleted All Airplane");
     }
+
 }

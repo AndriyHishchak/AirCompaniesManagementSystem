@@ -39,7 +39,7 @@ public class AirCompanyServiceImpl implements AirCompanyService {
         airCompany.setFlights(flights);
         AirCompany airCompanySave = airCompanyRepository.save(airCompany);
         AirCompanyDto  result = AirCompanyDto.fromAirCompany(airCompanySave);
-        log.info("IN created - airCompany: {} successfully created", airCompanySave);
+        log.info("IN created - airCompany: {} successfully created", result);
         return result;
     }
 
@@ -64,7 +64,6 @@ public class AirCompanyServiceImpl implements AirCompanyService {
             log.info("IN findByName - airCompany: {} find by name: {}", airCompany,name);
             return airCompanyDtos;
         }
-
         List<AirCompany> airCompanies = airCompanyRepository.findAll();
         airCompanies.forEach(company -> airCompanyDtos.add(AirCompanyDto.fromAirCompany(company)));
         log.info("IN getAll - {} company found", airCompanyDtos.size());
@@ -72,37 +71,32 @@ public class AirCompanyServiceImpl implements AirCompanyService {
     }
 
     @Override
-    public AirCompanyDto updateTypeCompany(Long id, String typeCompany) {
-        airCompanyRepository.findById(id)
+    public AirCompanyDto updateTypeCompany(Long id, String typeCompany,Optional<String> name) {
+        AirCompany airCompany = airCompanyRepository.findById(id)
                 .orElseThrow( () -> new NotFoundException("Air Company not found"));
-
-        AirCompany airCompany = airCompanyRepository.findById(id).get();
-        airCompany.setTypeCompany(TypeCompany.valueOf(typeCompany.toUpperCase()));
-        airCompanyRepository.save(airCompany);
-        log.info("IN update - AirCompany with id : {} ",id);
-        return AirCompanyDto.fromAirCompany(airCompany);
+        if (name.isPresent()) {
+            airCompany.setName(name.get());
+            log.info("IN update Name Company - AirCompany with id : {} ", id);
+        }else {
+            airCompany.setTypeCompany(TypeCompany.valueOf(typeCompany.toUpperCase()));
+            log.info("IN update Type Company - AirCompany with id : {} ", id);
+        }
+        airCompany.setUpdatedAt(LocalDateTime.now(Clock.systemDefaultZone()));
+        return AirCompanyDto.fromAirCompany(airCompanyRepository.save(airCompany));
     }
 
-    @Override
-    public AirCompanyDto update(Long id,AirCompany airCompanyPath) {
-        airCompanyRepository.findById(id)
-                .orElseThrow( () -> new NotFoundException("Air Company not found"));
-
-        AirCompany airCompanyRefresh = airCompanyRepository.findById(id).get();
-        if(airCompanyPath.getName() !=null){
-            airCompanyRefresh.setName(airCompanyPath.getName());
-        }
-        if(!airCompanyPath.getTypeCompany().equals(airCompanyRefresh.getTypeCompany()) ) {
-            airCompanyRefresh.setTypeCompany(airCompanyPath.getTypeCompany());
-        }
-        airCompanyRefresh.setUpdatedAt(LocalDateTime.now(Clock.systemDefaultZone()));
-
-        airCompanyRepository.save(airCompanyRefresh);
-
-
-        log.info("IN update - AirCompany with id : {} ",id);
-        return AirCompanyDto.fromAirCompany(airCompanyRefresh);
-    }
+//    @Override
+//    public AirCompanyDto update(Long id,AirCompany airCompanyPath) {
+//
+//        airCompanyRepository.findById(id)
+//                .orElseThrow( () -> new NotFoundException("Air Company not found"));
+//
+//
+//        airCompanyPath.setUpdatedAt(LocalDateTime.now(Clock.systemDefaultZone()));
+//        airCompanyRepository.save(airCompanyPath);
+//        log.info("IN update - AirCompany with id : {} ",id);
+//        return AirCompanyDto.fromAirCompany(airCompanyPath);
+//    }
 
     @Override
     public void deleteAirCompany(Long id) {

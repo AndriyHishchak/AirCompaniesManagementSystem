@@ -1,18 +1,22 @@
 package com.AirCompanies.rest;
 
 import com.AirCompanies.Dto.AirplaneDto;
+import com.AirCompanies.exception.NotFoundException;
 import com.AirCompanies.model.AirCompany;
 import com.AirCompanies.model.Airplane;
+import com.AirCompanies.model.TypeAirplane;
 import com.AirCompanies.service.Impl.AirplaneServiceImpl;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
-@RequestMapping("airplane/")
+@RequestMapping("airplanes/")
 public class AirplaneRestController {
 
     private final AirplaneServiceImpl airplaneService;
@@ -22,77 +26,55 @@ public class AirplaneRestController {
         this.airplaneService = airplaneService;
     }
 
-    @GetMapping("all")
-    public List<AirplaneDto> getAll() {
-        return airplaneService.getAll();
+    @GetMapping()
+    public List<AirplaneDto> getAll(@RequestParam(value = "name",required = false) Optional<String> name,
+                                    @RequestParam(value = "uuid",required = false) Optional<String> uuid) {
+        return airplaneService.getAll( name,uuid );
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<AirplaneDto> getUserId(@PathVariable(name = "id") Long id) {
-        Airplane airplane = airplaneService.findById(id);
-
-        if(airplane == null) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        AirplaneDto result = AirplaneDto.fromAirplane(airplane);
-        return new ResponseEntity<>(result,HttpStatus.OK);
+    public ResponseEntity<AirplaneDto> getById(@PathVariable(name = "id") Long id) {
+        return new ResponseEntity<>(airplaneService.findById(id),HttpStatus.OK);
     }
-    @GetMapping("name/{name}")
-    public ResponseEntity<AirplaneDto> findByName(@PathVariable("name") String name){
 
-        Airplane airplane = airplaneService.findByName(name);
-        AirplaneDto result = AirplaneDto.fromAirplane(airplane);
-        return new ResponseEntity<>(result, HttpStatus.OK);
-    }
-    @PostMapping("create")
-    public Airplane registration (@RequestBody Airplane airplane,
-                                  @RequestParam("airCompanyID") AirCompany airCompany){
+    @PostMapping()
+    public ResponseEntity<?> registration (@RequestBody Airplane airplane,
+                                           @RequestParam(value = "airCompanyID") AirCompany airCompany){
+        AirplaneDto createdAirplane = airplaneService.create(airplane,airCompany);
+        return ResponseEntity.created( URI.create("/airplanes/" + createdAirplane.getId())).build();
 
-        airplane.setFlights(null);
-        airplane.setAirCompany(airCompany);
-        Airplane createdAirplane = airplaneService.create(airplane);
-        //AirCompanyDto result = AirCompanyDto.fromAirCompany(createdAirCompany);
-        return createdAirplane;
     }
-    @PatchMapping("{id}/update/company")
+    @PatchMapping("{id}/update/parameter")
     public ResponseEntity<AirplaneDto> updateCompany(@PathVariable("id")Long id,
-                                                    @RequestParam("airCompanyID") AirCompany airCompany) {
-        AirplaneDto result = AirplaneDto.fromAirplane(airplaneService.updateCompany(id,airCompany));
-        return new ResponseEntity<>(result, HttpStatus.OK);
+                                                     @RequestParam(value = "airCompanyID",required = false) Optional<AirCompany> airCompany,
+                                                     @RequestParam(value = "typeAirplane",required = false) Optional<TypeAirplane> typeAirplane,
+                                                     @RequestParam(value = "name",required = false) Optional<String> name,
+                                                     @RequestParam(value = "numberOfFlights",required = false) Optional<Integer> numberOfFlights,
+                                                     @RequestParam(value = "flightDistance",required = false) Optional<Double> flightDistance,
+                                                     @RequestParam(value = "fuelCapacity",required = false) Optional<Double> fuelCapacity) {
+        return new ResponseEntity<>(airplaneService.updateParameterAirplane(id,airCompany,typeAirplane,name,numberOfFlights,flightDistance,fuelCapacity), HttpStatus.OK);
     }
-    @PatchMapping("{id}/update/typeAirplane")
+    @PutMapping("{id}")
     public ResponseEntity<AirplaneDto> updateTypeAirplane(@PathVariable("id")Long id,
-                                                   @RequestParam("typeAirplane") String typeAirplane) {
-        Airplane airplaneUpdate = airplaneService.updateTypeAirplane(id, typeAirplane);
-
-        AirplaneDto result = AirplaneDto.fromAirplane(airplaneUpdate);
-        return new ResponseEntity<>(result, HttpStatus.OK);
-    }
-
-    @PatchMapping(path = "/{id}")
-    public ResponseEntity<AirplaneDto> update(@PathVariable("id")Long id,
-                          @RequestBody Airplane airplanePath) {
-        Airplane airplaneUpdate = airplaneService.update(id,airplanePath);
-        AirplaneDto result = AirplaneDto.fromAirplane(airplaneUpdate);
-        return new ResponseEntity<>(result, HttpStatus.OK);
+                                                          @RequestBody Airplane airplaneRefresh) {
+        return new ResponseEntity<>(airplaneService.update(id, airplaneRefresh), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
     public void deleteById(@PathVariable("id") Long id){
-        try {
             airplaneService.deleteAirplane(id);
-        }catch (EmptyResultDataAccessException e){
-            e.printStackTrace();
-        }
     }
+
     @DeleteMapping("/all")
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
     public void deleteAll(){
-        try {
             airplaneService.deleteAllAirplane();
-        }catch (EmptyResultDataAccessException e){
-            e.printStackTrace();
-        }
+    }
+
+    @ExceptionHandler(value = NotFoundException.class)
+    public ResponseEntity<?> handlerNotFoundException (NotFoundException exception) {
+//                ResponseEntity.ok(exception.getMessage());
+        return (ResponseEntity<?>) ResponseEntity.notFound();
     }
 }
