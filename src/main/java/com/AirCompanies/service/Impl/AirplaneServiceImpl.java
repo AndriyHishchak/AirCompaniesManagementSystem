@@ -57,13 +57,15 @@ public class AirplaneServiceImpl implements AirplaneService {
         List<AirplaneDto> airplaneDtos = new ArrayList<>();
 
         if (name.isPresent()){
-            List <Airplane> airCompanies = Collections.singletonList(airplaneRepository.findByName( name.get() ));
+            List <Airplane> airCompanies = airplaneRepository.findByName( name.get() );
             airCompanies.forEach(airplane -> airplaneDtos.add(AirplaneDto.fromAirplane(airplane)));
             log.info("IN findByName - airplane: {} find by name: {}", airCompanies,name);
+            return new ArrayList<>(airplaneDtos);
         } else if (uuid.isPresent()) {
             List <Airplane> airCompanies = Collections.singletonList(airplaneRepository.findByFactorySerialNumber( uuid.get() ));
             airCompanies.forEach(airplane -> airplaneDtos.add(AirplaneDto.fromAirplane(airplane)));
             log.info("IN findByFactorySerialNumber - airplane: {} find by SerialNumber: {}", airCompanies,name);
+            return new ArrayList<>(airplaneDtos);
         }
         List<Airplane> airplanes = airplaneRepository.findAll();
         airplanes.forEach(airplane -> airplaneDtos.add(AirplaneDto.fromAirplane(airplane)));
@@ -102,7 +104,7 @@ public class AirplaneServiceImpl implements AirplaneService {
         return AirplaneDto.fromAirplane(airplaneRepository.save(airplane));
     }
 
-    @Override
+   /* @Override
     public AirplaneDto update(Long id,Airplane airplanePath) {
         Airplane airplaneRefresh = airplaneRepository.findById(id)
                 .orElseThrow( () -> new NotFoundException("Airplane not found"));
@@ -123,10 +125,10 @@ public class AirplaneServiceImpl implements AirplaneService {
             airplaneRefresh.setFuelCapacity(airplanePath.getFuelCapacity());
         }
         airplaneRefresh.setUpdatedAt(LocalDateTime.now(Clock.systemDefaultZone()));
-        airplaneRepository.save(airplaneRefresh);
+
         log.info("IN update - Airplane with id : {} ",id);
-        return AirplaneDto.fromAirplane(airplaneRefresh);
-    }
+        return AirplaneDto.fromAirplane(airplaneRepository.save(airplaneRefresh));
+    }*/
 
     @Override
     public void deleteAirplane(Long id) {

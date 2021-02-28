@@ -3,6 +3,7 @@ package com.AirCompanies.rest;
 import com.AirCompanies.Dto.AirCompanyDto;
 import com.AirCompanies.exception.NotFoundException;
 import com.AirCompanies.model.AirCompany;
+import com.AirCompanies.model.TypeCompany;
 import com.AirCompanies.service.Impl.AirCompanyServiceImpl;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
@@ -40,17 +41,17 @@ public class AirCompanyRestController {
     }
 
 
-    @PatchMapping("{id}/update/parameter")
+    @PatchMapping("{id}/update/parameters")
     public ResponseEntity<AirCompanyDto> updateStatus(@PathVariable("id")Long id,
-                                                   @RequestParam(value = "type",required = false) String typeCompany,
+                                                   @RequestParam(value = "type",required = false) Optional<TypeCompany> typeCompany,
                                                    @RequestParam(value = "name",required = false) Optional<String> name) {
-        return new ResponseEntity<>(airCompanyService.updateTypeCompany(id, typeCompany,name), HttpStatus.OK);
+        return new ResponseEntity<>(airCompanyService.updateParametersAirCompany(id, typeCompany,name), HttpStatus.OK);
     }
 
-//    @PutMapping("/{id}")
-//    public ResponseEntity<AirCompanyDto> update(@PathVariable("id")Long id, @RequestBody AirCompany airCompanyRefresh) {
-//        return new ResponseEntity<>(airCompanyService.update(id,airCompanyRefresh), HttpStatus.OK);
-//    }
+   /* @PutMapping("/{id}")
+    public ResponseEntity<AirCompanyDto> update(@PathVariable("id")Long id, @RequestBody AirCompany airCompanyRefresh) {
+        return new ResponseEntity<>(airCompanyService.update(id,airCompanyRefresh), HttpStatus.OK);
+    }*/
 
     @DeleteMapping("/{id}")
     @ResponseStatus(code = HttpStatus.NO_CONTENT)

@@ -1,22 +1,17 @@
 package com.AirCompanies.service.Impl;
 
 import com.AirCompanies.Dto.FlightDto;
+import com.AirCompanies.exception.NotFoundException;
 import com.AirCompanies.model.*;
 import com.AirCompanies.repository.FlightRepository;
 import com.AirCompanies.service.FlightService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.sql.Time;
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -29,91 +24,150 @@ public class FlightServiceImpl implements FlightService {
     }
 
     @Override
-    public Flight create(Flight flight) {
+    public FlightDto create(Flight flight,AirCompany airCompany,Airplane airplane) {
+        flight.setAirCompany(airCompany);
+        flight.setAirplane(airplane);
         Flight FlightSave = flightRepository.save(flight);
+        FlightDto result = FlightDto.fromFlight(FlightSave);
         log.info("IN created - flight : {} successfully created", FlightSave);
-        return FlightSave;
+        return result;
     }
 
     @Override
-    public Flight findById(Long id) {
-        Flight flight = flightRepository.findById(id).orElse(null);
+    public FlightDto findById(Long id) {
+        Flight flight = flightRepository.findById(id)
+                .orElseThrow( () -> new NotFoundException("Flight not found"));
 
-        if (flight == null) {
-            log.warn("IN findByID - no flight found by id: {}",id);
-            return null;
-        }
         log.info("IN findByID - flight: {} find by id: {}", flight,id);
-        return flight;
+        return FlightDto.fromFlight(flight);
     }
 
-
-
-    @Override
-    public List<FlightDto> getAll() {
+    public List<FlightDto> getAll(Optional<Status> status,
+                                  Optional<Country> departureCountry,
+                                  Optional<Country> destinationCountry) {
         List<FlightDto> flightDtos = new ArrayList<>();
-        List<Flight> flights = flightRepository.findAll();
-        flights.forEach(flight -> flightDtos.add(FlightDto.fromFlight(flight)));
-        log.info("IN getAll - {} flights found", flightDtos.size());
+
+        if (status.isPresent()) {
+            List<Flight> flights = flightRepository.findByStatus(status.get());
+            flights.forEach(flight -> flightDtos.add(FlightDto.fromFlight(flight)));
+            log.info("IN findByStatus - flight: {} find by status: {}",flights,status);
         return new ArrayList<>(flightDtos);
+        } else if (departureCountry.isPresent() && destinationCountry.isPresent()){
+            List<Flight> flights = flightRepository.findByDestinationCountryAndDepartureCountry(departureCountry.get(),destinationCountry.get());
+            flights.forEach(flight -> flightDtos.add(FlightDto.fromFlight(flight)));
+            log.info("IN findByDestinationCountryAndDepartureCountry - airCompany: {} find by Country: {}",flights,status);
+            return new ArrayList<>(flightDtos);
+        } else if (departureCountry.isPresent()) {
+            List<Flight> flights = flightRepository.findByDepartureCountry(departureCountry.get());
+            flights.forEach(flight -> flightDtos.add(FlightDto.fromFlight(flight)));
+            log.info("IN findByDepartureCountry - airCompany: {} find by Country: {}",flights,status);
+            return new ArrayList<>(flightDtos);
+        } else if (destinationCountry.isPresent()) {
+            List<Flight> flights = flightRepository.findByDestinationCountry(destinationCountry.get());
+            flights.forEach(flight -> flightDtos.add(FlightDto.fromFlight(flight)));
+            log.info("IN findByDestinationCountry - airCompany: {} find by Country: {}",flights,status);
+            return new ArrayList<>(flightDtos);
+        }
+        List<Flight> flightDtoList = flightRepository.findAll();
+        flightDtoList.forEach(company -> flightDtos.add(FlightDto.fromFlight(company)));
+        log.info("IN getAll - {} company found", flightDtos.size());
+        return new ArrayList<>(flightDtos);
+
     }
 
     @Override
-    public Flight updateStatus(Long id, String status) {
-        Flight flight = flightRepository.findById(id).get();
-        flight.setStatus(Status.valueOf(status.toUpperCase()));
-        log.info("IN update status - flight with id : {} ",id);
-        return flightRepository.save(flight);
+    public FlightDto updateParametersFlight(Long id,
+                                         Optional<Status> status,
+                                         Optional<AirCompany> airCompany,
+                                         Optional<Airplane> airplane,
+                                         Optional<Country> departureCountry,
+                                         Optional<Country> destinationCountry,
+                                         Optional<Double> distance,
+                                         Optional<LocalTime> estimatedFlightTime,
+                                         Optional<LocalDateTime> endedAt,
+                                         Optional<LocalDateTime> departureAt,
+                                         Optional<LocalTime> delayStartAt) {
+
+        Flight flight = flightRepository.findById(id)
+                .orElseThrow( () -> new NotFoundException("Flight not found"));
+        if (status.isPresent()) {
+            flight.setStatus(status.get());
+            log.info("IN update status Flight - Flight with id : {} ", id);
+        }
+        if (airCompany.isPresent()){
+            flight.setAirCompany(airCompany.get());
+            log.info("IN update airCompany Flight - Flight with id : {} ", id);
+        }
+        if(airplane.isPresent()) {
+            flight.setAirplane(airplane.get());
+            log.info("IN update airplane Flight - Flight with id : {} ", id);
+        }
+        if (departureCountry.isPresent()) {
+            flight.setDepartureCountry(departureCountry.get());
+            log.info("IN update departureCountry Flight - Flight with id : {} ", id);
+        }
+        if (destinationCountry.isPresent()) {
+            flight.setDestinationCountry(destinationCountry.get());
+            log.info("IN update destinationCountry Flight - Flight with id : {} ", id);
+        }
+        if (distance.isPresent()) {
+            flight.setDistance(distance.get());
+            log.info("IN update distance Flight - Flight with id : {} ", id);
+        }
+        if (estimatedFlightTime.isPresent()) {
+            flight.setEstimatedFlightTime(estimatedFlightTime.get());
+            log.info("IN update estimatedFlightTime Flight - Flight with id : {} ", id);
+        }
+        if (endedAt.isPresent()) {
+            flight.setEndedAt(endedAt.get());
+            log.info("IN update endedAt Flight - Flight with id : {} ", id);
+        }
+        if (departureAt.isPresent()) {
+            flight.setDepartureAt(departureAt.get());
+            log.info("IN update departureAt Flight - Flight with id : {} ", id);
+        }
+        if (delayStartAt.isPresent()) {
+            flight.setDelayStartAt(delayStartAt.get());
+            log.info("IN update delayStartAt Flight - Flight with id : {} ", id);
+        }
+        flight.setUpdatedAt(LocalDateTime.now(Clock.systemDefaultZone()));
+        log.info("IN finish update  - flight with id : {} ",id);
+        return FlightDto.fromFlight(flightRepository.save(flight));
     }
 
-    @Override
-    public Flight updateAirplane(Long id, Airplane airplane) {
-        Flight flightUpdate = flightRepository.findById(id).get();
-        flightUpdate.setAirplane(airplane);
-        flightUpdate.setAirCompany(airplane.getAirCompany());
-        flightRepository.save(flightUpdate);
-        return flightUpdate;
-    }
+//    @Override
+//    public FlightDto update (Long id, Flight flightPath) {
+//        Flight flightRefresh = flightRepository.findById(id)
+//                .orElseThrow( () -> new NotFoundException("Flight not found"));
+//
+//        if(!flightPath.getStatus().equals(flightRefresh.getStatus()) ) {
+//            flightRefresh.setStatus(flightPath.getStatus());
+//        }
+//        if(!flightPath.getDepartureCountry().equals(flightRefresh.getDepartureCountry()) ) {
+//            flightRefresh.setDepartureCountry(flightPath.getDepartureCountry());
+//        }
+//        if(!flightPath.getDestinationCountry().equals(flightRefresh.getDestinationCountry()) ) {
+//            flightRefresh.setDestinationCountry((flightPath.getDestinationCountry()));
+//        }
+//        if(!flightPath.getDistance().equals(flightRefresh.getDistance())) {
+//            flightRefresh.setDistance(flightPath.getDistance());
+//        }
+//        if(flightPath.getEstimatedFlightTime() != (flightRefresh.getEstimatedFlightTime()) ) {
+//            flightRefresh.setEstimatedFlightTime(flightPath.getEstimatedFlightTime());
+//        }
+//        if(flightPath.getDepartureAt() != (flightRefresh.getDepartureAt()) ) {
+//            flightRefresh.setDepartureAt(flightPath.getDepartureAt());
+//        }
+//        if(flightPath.getEndedAt() != (flightRefresh.getEndedAt()) ) {
+//            flightRefresh.setEndedAt(flightPath.getEndedAt());
+//        }
+//
+//        flightRefresh.setUpdatedAt(LocalDateTime.now(Clock.systemDefaultZone()));
+//
+//        log.info("IN update - flight with id : {} ",id);
+//        return FlightDto.fromFlight(flightRepository.save(flightRefresh));
+//    }
 
-    @Override
-    public Flight update (Long id, Flight flightPath) {
-
-        Flight flightRefresh = flightRepository.findById(id).get();
-
-        if(!flightPath.getStatus().equals(flightRefresh.getStatus()) ) {
-            flightRefresh.setStatus(flightPath.getStatus());
-        }
-        if(!flightPath.getDepartureCountry().equals(flightRefresh.getDepartureCountry()) ) {
-            flightRefresh.setDepartureCountry(flightPath.getDepartureCountry());
-        }
-        if(!flightPath.getDestinationCountry().equals(flightRefresh.getDestinationCountry()) ) {
-            flightRefresh.setDestinationCountry((flightPath.getDestinationCountry()));
-        }
-        if(flightPath.getDistance() != (flightRefresh.getDistance()) ) {
-            flightRefresh.setDistance(flightPath.getDistance());
-        }
-        if(flightPath.getEstimatedFlightTime() != (flightRefresh.getEstimatedFlightTime()) ) {
-            flightRefresh.setEstimatedFlightTime(flightPath.getEstimatedFlightTime());
-        }
-        if(flightPath.getDepartureAt() != (flightRefresh.getDepartureAt()) ) {
-            flightRefresh.setDepartureAt(flightPath.getDepartureAt());
-        }
-        if(flightPath.getEndedAt() != (flightRefresh.getEndedAt()) ) {
-            flightRefresh.setEndedAt(flightPath.getEndedAt());
-        }
-
-        flightRefresh.setUpdatedAt(LocalDateTime.now(Clock.systemDefaultZone()));
-        log.info("IN update - flight with id : {} ",id);
-        return flightRepository.save(flightRefresh);
-    }
-    @Override
-    public List<FlightDto> findByFlightByStatus(String status) {
-        List<FlightDto> flightDtos = new ArrayList<>();
-        List<Flight> flights = flightRepository.findByStatus(Status.valueOf(status.toUpperCase()));
-        flights.forEach(flight -> flightDtos.add(FlightDto.fromFlight(flight)));
-        log.info("IN getAll - {} flight found", flightDtos.size());
-        return flightDtos;
-    }
 
     @Override
     public List<FlightDto> findByRecentFlights() {
@@ -129,6 +183,9 @@ public class FlightServiceImpl implements FlightService {
 
     @Override
     public void deleteFlight(Long id) {
+        flightRepository.findById(id)
+                .orElseThrow( () -> new NotFoundException("Flight not found"));
+
         flightRepository.deleteById(id);
         log.info("IN delete - Flight with id : {} ",id);
     }
