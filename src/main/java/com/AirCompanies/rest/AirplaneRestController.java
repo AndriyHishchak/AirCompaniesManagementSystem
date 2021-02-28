@@ -6,7 +6,6 @@ import com.AirCompanies.model.AirCompany;
 import com.AirCompanies.model.Airplane;
 import com.AirCompanies.model.TypeAirplane;
 import com.AirCompanies.service.Impl.AirplaneServiceImpl;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

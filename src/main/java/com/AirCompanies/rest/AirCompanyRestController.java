@@ -5,13 +5,12 @@ import com.AirCompanies.exception.NotFoundException;
 import com.AirCompanies.model.AirCompany;
 import com.AirCompanies.model.TypeCompany;
 import com.AirCompanies.service.Impl.AirCompanyServiceImpl;
-import org.springframework.dao.EmptyResultDataAccessException;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 

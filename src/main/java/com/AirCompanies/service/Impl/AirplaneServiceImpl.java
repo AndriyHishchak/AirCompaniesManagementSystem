@@ -12,8 +12,6 @@ import com.AirCompanies.service.AirplaneService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.time.Clock;
-import java.time.LocalDateTime;
 import java.util.*;
 
 

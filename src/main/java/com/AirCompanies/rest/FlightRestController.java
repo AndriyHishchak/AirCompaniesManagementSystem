@@ -1,12 +1,10 @@
 package com.AirCompanies.rest;
 
-import com.AirCompanies.Dto.AirplaneDto;
+
 import com.AirCompanies.Dto.FlightDto;
 import com.AirCompanies.exception.NotFoundException;
 import com.AirCompanies.model.*;
-import com.AirCompanies.service.Impl.AirplaneServiceImpl;
 import com.AirCompanies.service.Impl.FlightServiceImpl;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -65,11 +63,11 @@ public class FlightRestController {
         return new ResponseEntity<>(flightService.updateParametersFlight(id,status,airCompany,airplane,departureCountry,destinationCountry,distance,estimatedFlightTime,endedAt,departureAt,delayStartAt), HttpStatus.OK);
     }
 
-//    @PutMapping("{id}")
-//    public ResponseEntity<FlightDto> updateFlight(@PathVariable("id")Long id,
-//                                                   @RequestBody Flight flight) {
-//        return new ResponseEntity<>(flightService.update(id,flight), HttpStatus.OK);
-//    }
+   /* @PutMapping("{id}")
+    public ResponseEntity<FlightDto> updateFlight(@PathVariable("id")Long id,
+                                                   @RequestBody Flight flight) {
+        return new ResponseEntity<>(flightService.update(id,flight), HttpStatus.OK);
+    }*/
 
 
     @GetMapping("RecentFlights")

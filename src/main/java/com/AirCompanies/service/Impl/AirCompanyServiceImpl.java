@@ -2,7 +2,6 @@ package com.AirCompanies.service.Impl;
 
 
 import com.AirCompanies.Dto.AirCompanyDto;
-import com.AirCompanies.Dto.AirplaneDto;
 import com.AirCompanies.exception.NotFoundException;
 import com.AirCompanies.model.AirCompany;
 import com.AirCompanies.model.Airplane;
@@ -16,7 +15,6 @@ import org.springframework.stereotype.Service;
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
