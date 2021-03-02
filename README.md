@@ -25,11 +25,11 @@ To get acquainted with the API collection you can use:
    started and ended time is bigger than estimated flight time.
 
 # Requirements
-1) Java 15
-2) Spring Boot 2.4.3
-3) MySQL
-4) Rest API
-5) Docker
+- Java 15
+- Spring Boot 2.4.3
+- MySQL
+- Rest API
+- Docker
 
 
 #Documentation
