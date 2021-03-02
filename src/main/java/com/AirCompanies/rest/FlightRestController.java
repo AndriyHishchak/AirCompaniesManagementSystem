@@ -78,7 +78,7 @@ public class FlightRestController {
         return flightService.findByRecentFlights();
     }
 
-    @GetMapping("completedFlights")
+    @GetMapping("find/completedFlights")
     public List<FlightDto> findByCompletedFlights() {
         return flightService.findByCompletedFlights();
     }

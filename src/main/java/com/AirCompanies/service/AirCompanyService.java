@@ -14,7 +14,7 @@ public interface AirCompanyService {
     AirCompanyDto updateParametersAirCompany (Long id,
                                               Optional<TypeCompany> typeCompany,
                                               Optional<String> name);
-//    AirCompanyDto update (Long id,AirCompany airCompany);
+    AirCompanyDto update (Long id,AirCompany airCompany);
     void deleteAirCompany (Long id);
     void deleteAllAirCompany ();
 }

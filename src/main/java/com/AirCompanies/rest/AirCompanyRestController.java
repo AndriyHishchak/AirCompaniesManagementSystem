@@ -47,10 +47,10 @@ public class AirCompanyRestController {
         return new ResponseEntity<>(airCompanyService.updateParametersAirCompany(id, typeCompany,name), HttpStatus.OK);
     }
 
-   /* @PutMapping("/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<AirCompanyDto> update(@PathVariable("id")Long id, @RequestBody AirCompany airCompanyRefresh) {
         return new ResponseEntity<>(airCompanyService.update(id,airCompanyRefresh), HttpStatus.OK);
-    }*/
+    }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
@@ -65,7 +65,6 @@ public class AirCompanyRestController {
 
     @ExceptionHandler(value = NotFoundException.class)
     public ResponseEntity<?> handlerNotFoundException (NotFoundException exception) {
-//                ResponseEntity.ok(exception.getMessage());
         return (ResponseEntity<?>) ResponseEntity.notFound();
     }
 }

@@ -35,6 +35,15 @@ public class AirCompany extends BaseEntity {
     @OneToMany(mappedBy = "airCompany",cascade=CascadeType.ALL, fetch = FetchType.LAZY)
     List<Flight> flights;
 
+    public AirCompany(String name, TypeCompany typeCompany) {
+        this.name = name;
+        this.typeCompany = typeCompany;
+    }
+
+    public AirCompany() {
+
+    }
+
     @Override
     public String toString() {
         return "AirCompany{" +

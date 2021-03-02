@@ -12,6 +12,8 @@ import com.AirCompanies.service.AirplaneService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.Clock;
+import java.time.LocalDateTime;
 import java.util.*;
 
 
@@ -102,31 +104,24 @@ public class AirplaneServiceImpl implements AirplaneService {
         return AirplaneDto.fromAirplane(airplaneRepository.save(airplane));
     }
 
-   /* @Override
+    @Override
     public AirplaneDto update(Long id,Airplane airplanePath) {
         Airplane airplaneRefresh = airplaneRepository.findById(id)
                 .orElseThrow( () -> new NotFoundException("Airplane not found"));
 
-        if(airplanePath.getName() !=null){
             airplaneRefresh.setName(airplanePath.getName());
-        }
-        if(!airplanePath.getTypeAirplane().equals(airplaneRefresh.getTypeAirplane()) ) {
             airplaneRefresh.setTypeAirplane(airplanePath.getTypeAirplane());
-        }
-        if(!airplanePath.getNumberOfFlights().equals(airplaneRefresh.getNumberOfFlights())) {
+            airplaneRefresh.setAirCompany(airplanePath.getAirCompany());
+            airplaneRefresh.setFactorySerialNumber(airplanePath.getFactorySerialNumber());
             airplaneRefresh.setNumberOfFlights(airplanePath.getNumberOfFlights());
-        }
-        if(!airplanePath.getFlightDistance().equals(airplaneRefresh.getFlightDistance())) {
             airplaneRefresh.setFlightDistance(airplanePath.getFlightDistance());
-        }
-        if(!airplanePath.getFuelCapacity().equals(airplaneRefresh.getFuelCapacity())) {
             airplaneRefresh.setFuelCapacity(airplanePath.getFuelCapacity());
-        }
+        airplaneRefresh.setCreatedAt(LocalDateTime.now(Clock.systemDefaultZone()));
         airplaneRefresh.setUpdatedAt(LocalDateTime.now(Clock.systemDefaultZone()));
 
         log.info("IN update - Airplane with id : {} ",id);
         return AirplaneDto.fromAirplane(airplaneRepository.save(airplaneRefresh));
-    }*/
+    }
 
     @Override
     public void deleteAirplane(Long id) {

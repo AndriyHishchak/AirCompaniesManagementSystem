@@ -81,18 +81,22 @@ public class AirCompanyServiceImpl implements AirCompanyService {
         return AirCompanyDto.fromAirCompany(airCompanyRepository.save(airCompany));
     }
 
- /*   @Override
+    @Override
     public AirCompanyDto update(Long id,AirCompany airCompanyPath) {
 
-        airCompanyRepository.findById(id)
+        AirCompany airCompanyRefresh = airCompanyRepository.findById(id)
                 .orElseThrow( () -> new NotFoundException("Air Company not found"));
 
-
-        airCompanyPath.setUpdatedAt(LocalDateTime.now(Clock.systemDefaultZone()));
-        airCompanyRepository.save(airCompanyPath);
+        airCompanyRefresh.setName(airCompanyPath.getName());
+        airCompanyRefresh.setTypeCompany(airCompanyPath.getTypeCompany());
+        airCompanyRefresh.setAirplanes(airCompanyPath.getAirplanes());
+        airCompanyRefresh.setFlights(airCompanyPath.getFlights());
+        airCompanyRefresh.setCreatedAt(LocalDateTime.now(Clock.systemDefaultZone()));
+        airCompanyRefresh.setUpdatedAt(LocalDateTime.now(Clock.systemDefaultZone()));
+        airCompanyRepository.save(airCompanyRefresh);
         log.info("IN update - AirCompany with id : {} ",id);
-        return AirCompanyDto.fromAirCompany(airCompanyPath);
-    }*/
+        return AirCompanyDto.fromAirCompany(airCompanyRefresh);
+    }
 
     @Override
     public void deleteAirCompany(Long id) {

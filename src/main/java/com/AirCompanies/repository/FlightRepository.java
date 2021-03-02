@@ -14,11 +14,9 @@ public interface FlightRepository extends JpaRepository<Flight,Long> {
     List<Flight> findByStatus(Status status);
     List<Flight> findByAirCompany_Name(String airCompany);
 
-    @Query ( value = "SELECT * FROM Flight " +
-                    "WHERE flight.status = 'COMPLETED' " +
-                    "And DATEDIFF(flight.ended_at,flight.started_at) > flight.estimated_flight_time" ,nativeQuery = true)
-    List<Flight> findByCompletedFlights ();
-
+    @Query(value="select * from Flight f " +
+            "where estimated_flight_time < timediff(ended_at, started_at) and f.status = 'COMPLETED'",nativeQuery = true)
+    List<Flight> findByCompletedFlights();
     List<Flight> findByDestinationCountry(Country country);
     List<Flight> findByDepartureCountry(Country country);
     List<Flight> findByAirCompany_NameAndStatus(String airCompany , Status status);
