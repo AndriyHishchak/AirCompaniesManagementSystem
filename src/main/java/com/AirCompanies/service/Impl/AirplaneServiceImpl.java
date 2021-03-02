@@ -103,7 +103,8 @@ public class AirplaneServiceImpl implements AirplaneService {
         log.info("IN finish update - Airplane with id : {} ",id);
         return AirplaneDto.fromAirplane(airplaneRepository.save(airplane));
     }
-
+/*
+@Transactional (readOnly = true)
     @Override
     public AirplaneDto update(Long id,Airplane airplanePath) {
         Airplane airplaneRefresh = airplaneRepository.findById(id)
@@ -122,7 +123,7 @@ public class AirplaneServiceImpl implements AirplaneService {
         log.info("IN update - Airplane with id : {} ",id);
         return AirplaneDto.fromAirplane(airplaneRepository.save(airplaneRefresh));
     }
-
+*/
     @Override
     public void deleteAirplane(Long id) {
         airplaneRepository.findById(id)

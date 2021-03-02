@@ -55,23 +55,19 @@ public class FlightRestController {
                                                     @RequestParam(value = "airplane",required = false) Optional<Airplane> airplane,
                                                     @RequestParam(value = "departureCountry",required = false) Optional<Country> departureCountry,
                                                     @RequestParam(value = "destinationCountry",required = false) Optional<Country> destinationCountry,
-                                                    @RequestParam(value = "distance",required = false) Optional<Double> distance,
-                                                    @RequestParam(value = "estimatedFlightTime",required = false) Optional<LocalTime> estimatedFlightTime,
-                                                    @RequestParam(value = "endedAt",required = false) Optional<LocalDateTime> endedAt,
-                                                    @RequestParam(value = "startedAt",required = false) Optional<LocalDateTime> StartedAt,
-                                                    @RequestParam(value = "delayStartAt",required = false) Optional<LocalDateTime> delayStartAt){
+                                                    @RequestParam(value = "distance",required = false) Optional<Double> distance){
 
         return new ResponseEntity<>(flightService.updateParametersFlight(id,
                 status,airCompany,airplane,departureCountry,destinationCountry,
-                distance,estimatedFlightTime,endedAt,StartedAt,delayStartAt), HttpStatus.OK);
+                distance), HttpStatus.OK);
     }
-
-   /* @PutMapping("{id}")
+/*
+    @PutMapping("{id}")
     public ResponseEntity<FlightDto> updateFlight(@PathVariable("id")Long id,
                                                    @RequestBody Flight flight) {
         return new ResponseEntity<>(flightService.update(id,flight), HttpStatus.OK);
-    }*/
-
+    }
+*/
 
     @GetMapping("RecentFlights")
     public List<FlightDto> findByRecentFlights() {

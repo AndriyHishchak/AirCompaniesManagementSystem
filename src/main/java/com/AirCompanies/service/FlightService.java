@@ -26,11 +26,7 @@ public interface FlightService {
                                      Optional<Airplane> airplane,
                                      Optional<Country> departureCountry,
                                      Optional<Country> destinationCountry,
-                                     Optional<Double> distance,
-                                     Optional<LocalTime> estimatedFlightTime,
-                                     Optional<LocalDateTime> endedAt,
-                                     Optional<LocalDateTime> StartedAt,
-                                     Optional<LocalDateTime> delayStartAt);
+                                     Optional<Double> distance);
     void deleteFlight (Long id);
     void deleteAllFlight ();
 
