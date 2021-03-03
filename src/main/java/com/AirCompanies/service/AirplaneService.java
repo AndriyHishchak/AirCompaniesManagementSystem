@@ -22,7 +22,7 @@ public interface AirplaneService {
                                         Optional<Integer> numberOfFlights,
                                         Optional<Double> flightDistance,
                                         Optional<Double> fuelCapacity);
-//    AirplaneDto update (Long id,Airplane airCompany);
+
     void deleteAirplane (Long id);
     void deleteAllAirplane ();
 }

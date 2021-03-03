@@ -103,27 +103,7 @@ public class AirplaneServiceImpl implements AirplaneService {
         log.info("IN finish update - Airplane with id : {} ",id);
         return AirplaneDto.fromAirplane(airplaneRepository.save(airplane));
     }
-/*
-@Transactional (readOnly = true)
-    @Override
-    public AirplaneDto update(Long id,Airplane airplanePath) {
-        Airplane airplaneRefresh = airplaneRepository.findById(id)
-                .orElseThrow( () -> new NotFoundException("Airplane not found"));
 
-            airplaneRefresh.setName(airplanePath.getName());
-            airplaneRefresh.setTypeAirplane(airplanePath.getTypeAirplane());
-            airplaneRefresh.setAirCompany(airplanePath.getAirCompany());
-            airplaneRefresh.setFactorySerialNumber(airplanePath.getFactorySerialNumber());
-            airplaneRefresh.setNumberOfFlights(airplanePath.getNumberOfFlights());
-            airplaneRefresh.setFlightDistance(airplanePath.getFlightDistance());
-            airplaneRefresh.setFuelCapacity(airplanePath.getFuelCapacity());
-        airplaneRefresh.setCreatedAt(LocalDateTime.now(Clock.systemDefaultZone()));
-        airplaneRefresh.setUpdatedAt(LocalDateTime.now(Clock.systemDefaultZone()));
-
-        log.info("IN update - Airplane with id : {} ",id);
-        return AirplaneDto.fromAirplane(airplaneRepository.save(airplaneRefresh));
-    }
-*/
     @Override
     public void deleteAirplane(Long id) {
         airplaneRepository.findById(id)

@@ -54,14 +54,7 @@ public class AirplaneRestController {
                                                      @RequestParam(value = "fuelCapacity",required = false) Optional<Double> fuelCapacity) {
         return new ResponseEntity<>(airplaneService.updateParameterAirplane(id,airCompany,typeAirplane,name,numberOfFlights,flightDistance,fuelCapacity), HttpStatus.OK);
     }
-    /*
 
-    @PutMapping("{id}")
-    public ResponseEntity<AirplaneDto> updateTypeAirplane(@PathVariable("id")Long id,
-                                                          @RequestBody Airplane airplaneRefresh) {
-        return new ResponseEntity<>(airplaneService.update(id, airplaneRefresh), HttpStatus.OK);
-    }
-*/
     @DeleteMapping("/{id}")
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
     public void deleteById(@PathVariable("id") Long id){
@@ -76,7 +69,7 @@ public class AirplaneRestController {
 
     @ExceptionHandler(value = NotFoundException.class)
     public ResponseEntity<?> handlerNotFoundException (NotFoundException exception) {
-//                ResponseEntity.ok(exception.getMessage());
+
         return (ResponseEntity<?>) ResponseEntity.notFound();
     }
 }

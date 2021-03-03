@@ -137,31 +137,6 @@ public class FlightServiceImpl implements FlightService {
     }
 
 
-    /*
-    @Override
-    public FlightDto update (Long id, Flight flightPath) {
-        Flight flightRefresh = flightRepository.findById(id)
-                .orElseThrow( () -> new NotFoundException("Flight not found"));
-
-
-            flightRefresh.setStatus(flightPath.getStatus());
-            flightRefresh.setAirplane(flightPath.getAirplane());
-            flightRefresh.setAirCompany(flightPath.getAirCompany());
-            flightRefresh.setDepartureCountry(flightPath.getDepartureCountry());
-            flightRefresh.setDestinationCountry((flightPath.getDestinationCountry()));
-            flightRefresh.setDistance(flightPath.getDistance());
-            flightRefresh.setEstimatedFlightTime(flightPath.getEstimatedFlightTime());
-            flightRefresh.setStartedAt(flightPath.getStartedAt());
-            flightRefresh.setEndedAt(flightPath.getEndedAt());
-
-        flightRefresh.setCreatedAt(LocalDateTime.now(Clock.systemDefaultZone()));
-        flightRefresh.setUpdatedAt(LocalDateTime.now(Clock.systemDefaultZone()));
-
-        log.info("IN update - flight with id : {} ",id);
-        return FlightDto.fromFlight(flightRepository.save(flightRefresh));
-    }
-*/
-
     @Override
     public List<FlightDto> changeFlightStatus() {
 
@@ -170,11 +145,11 @@ public class FlightServiceImpl implements FlightService {
         flights.forEach(flight -> {
 
             if (flight.getStatus().equals(Status.PENDING)) {
-//                flight.setStatus(Status.ACTIVE);
+
                 flight.setDelayStartAt(flight.getCreatedAt()); }
 
             if (flight.getStatus().equals(Status.ACTIVE)) {
-//                flight.setStatus(Status.COMPLETED);
+
                 flight.setStartedAt(flight.getCreatedAt().plusHours(1)); }
 
             if (flight.getStatus().equals(Status.COMPLETED)) {

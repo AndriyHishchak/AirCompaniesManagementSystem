@@ -35,8 +35,74 @@ First setup <a href="https://docs.docker.com/get-docker/">Docker<a/> and <a href
 
 Start the Docker daemon.
 
+Create a database and test data with Docker, because there is migration in the project
+
 
 The application will be accessible from localhost:8001 on your browser or API Client (Such as <a href="https://www.postman.com/">Postman<a/>).
+
+# REST API
+
+The REST API to the example app is described below.
+## Create airplane
+
+### Request
+
+`
+POST /airplanes/?airCompanyID=1
+`
+
+| Parameter | Type | Description |
+| :--- | :--- | :--- |
+| `airCompanyID` | `Long` | **Unique** company identifier |
+### Body
+```json
+{
+   "name": "ATR-42",
+   "typeAirplane": "PASSENGER",
+   "numberOfFlights": 1,
+   "flightDistance": 1950.0,
+   "fuelCapacity": 5730.0
+}
+```
+
+### Response
+
+    HTTP/1.1 201 Created
+    Wed, 03 Mar 2021 10:58:18 GMT
+    Status: 201 Created
+    Content-Type: application/json
+
+## Patch airplane by Air Company ID
+
+### Request
+
+`
+Patch /airplanes/3/update/parameters?airCompanyID=4
+`
+
+| Parameter | Type | Description |
+| :--- | :--- | :--- |
+| `airCompanyID` | `Long` | **Unique** company identifier |
+
+### Response
+
+    HTTP/1.1 200 OK
+    Wed, 03 Mar 2021 10:43:19 GMT
+    Status: 200 OK
+    Content-Type: application/json
+
+
+## Status Codes
+
+The server returns the following status codes in its API:
+
+| Status Code | Description |
+| :--- | :--- |
+| 200 | `OK` |
+| 201 | `CREATED` |
+| 400 | `BAD REQUEST` |
+| 404 | `NOT FOUND` |
+| 500 | `INTERNAL SERVER ERROR` |
 
 #Documentation
 The app documentation is accessipp documentation is accessible <a href="https://documenter.getpostman.com/view/10965008/TWDfDYye">here</a>.

@@ -61,13 +61,7 @@ public class FlightRestController {
                 status,airCompany,airplane,departureCountry,destinationCountry,
                 distance), HttpStatus.OK);
     }
-/*
-    @PutMapping("{id}")
-    public ResponseEntity<FlightDto> updateFlight(@PathVariable("id")Long id,
-                                                   @RequestBody Flight flight) {
-        return new ResponseEntity<>(flightService.update(id,flight), HttpStatus.OK);
-    }
-*/
+
 
     @GetMapping("RecentFlights")
     public List<FlightDto> findByRecentFlights() {

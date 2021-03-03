@@ -11,7 +11,7 @@ import java.util.Optional;
 public interface FlightService {
     FlightDto create(Flight flight, AirCompany airCompany, Airplane airplane);
     FlightDto findById (Long id);
-//    FlightDto update (Long id,Flight Flight);
+
 
     List<FlightDto> findByRecentFlights();
 
