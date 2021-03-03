@@ -46,9 +46,9 @@ The REST API to the example app is described below.
 
 ### Request
 
-`
+```http
 POST /flights/?airCompanyID=3&airplaneID=4
-`
+```
 
 | Parameter | Type | Description |
 | :--- | :--- | :--- |
@@ -76,9 +76,9 @@ POST /flights/?airCompanyID=3&airplaneID=4
 
 ### Request
 
-`
+```http
 Patch /airplanes/3/update/parameters?airCompanyID=4
-`
+```
 
 | Parameter | Type | Description |
 | :--- | :--- | :--- |
