@@ -23,14 +23,20 @@ To get acquainted with the API collection you can use:
    if status to change is COMPLETED set ended at
 8) Endpoint to find all Flights in COMPLETED status and difference between
    started and ended time is bigger than estimated flight time.
-
+   
 # Requirements
-- Java 15
-- Spring Boot 2.4.3
-- MySQL
-- Rest API
-- Docker
+1) Java 15
+2) Spring Boot 2.4.3
+3) MySQL
+4) Rest API
+5) Docker
+# Installation
+First setup <a href="https://docs.docker.com/get-docker/">Docker<a/> and <a href="https://docs.docker.com/compose/install/">Docker Compose<a/> on your machine.
 
+Start the Docker daemon.
+
+
+The application will be accessible from localhost:8001 on your browser or API Client (Such as <a href="https://www.postman.com/">Postman<a/>).
 
 #Documentation
-The app documentation is accessible <a href="https://documenter.getpostman.com/view/10965008/TWDfDYye#e2683166-7bc7-4136-b50d-bae591747252">here</a>.
+The app documentation is accessipp documentation is accessible <a href="https://documenter.getpostman.com/view/10965008/TWDfDYye">here</a>.
