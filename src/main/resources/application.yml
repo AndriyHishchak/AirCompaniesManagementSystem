@@ -1,0 +1,22 @@
+
+server:
+  port: 8001
+
+spring:
+  datasource:
+    url: jdbc:mariadb://${MYSQL_HOST:localhost}:3306/AirCompanies?useUnicode=true&serverTimezone=UTC
+    username: mysql
+    password: mysql
+    driver-class-name: org.mariadb.jdbc.Driver
+  jpa:
+    show-sql: false
+    hibernate:
+      ddl-auto: validate
+
+---
+spring:
+  config:
+    activate:
+      on-profile: test
+  datasource:
+    url: jdbc:mariadb://${MYSQL_HOST:localhost}:3306/AirCompanies

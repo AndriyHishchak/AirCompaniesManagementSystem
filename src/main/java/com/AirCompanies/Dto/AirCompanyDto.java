@@ -1,8 +1,6 @@
 package com.AirCompanies.Dto;
 
 import com.AirCompanies.model.AirCompany;
-import com.AirCompanies.model.Airplane;
-import com.AirCompanies.model.Flight;
 import com.AirCompanies.model.TypeCompany;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
