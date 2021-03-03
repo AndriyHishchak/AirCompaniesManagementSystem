@@ -5,16 +5,15 @@ An airline management API is required to create and manage airlines, their aircr
 The API is built on and Framework, the Postgres database.
 To get acquainted with the API collection you can use:
 [![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/d51443db2c1268b6ca13)
-
 # Features
 
 1) Simple CRUD operations for Air company entity.
-2) Endpoint to move airplanes between companies (simple endpoint to reassign airplane to
+2) Endpoint to move airplanes between companies (simple endpoint to reassign an airplane to
    another company).
 3) Endpoint to find all Air Company Flights by status (use company name for identification
    of Air Company).
 4) Endpoint to find all Flights in ACTIVE status and started more than 24 hours ago.
-5) Endpoint to add new Airplane (Could be assign to a company immediately or moved
+5) Endpoint to add a new Airplane (Could be assigned to a company immediately or moved
    later).
 6) Endpoint to add new Flight (set status to PENDING)
 7) Endpoint to change Flight status:
@@ -62,7 +61,7 @@ POST /flights/?airCompanyID=3&airplaneID=4
    "departureCountry": "UKRAINE",
    "destinationCountry": "MONACO",
    "estimatedFlightTime": "02:10:00",
-   "distance": 1300.94,
+   "distance": 1300.94
 }
 ```
 
@@ -105,5 +104,5 @@ The server returns the following status codes in its API:
 | 404 | `NOT FOUND` |
 | 500 | `INTERNAL SERVER ERROR` |
 
-#Documentation
-The app documentation is accessipp documentation is accessible <a href="https://documenter.getpostman.com/view/10965008/TWDfDYye">here</a>.
+# Documentation
+The API documentation is available <a href="https://documenter.getpostman.com/view/10965008/TWDfDYye">here</a>.
