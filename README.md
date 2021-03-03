@@ -77,7 +77,7 @@ POST /flights/?airCompanyID=3&airplaneID=4
 ### Request
 
 ```http
-Patch /airplanes/3/update/parameters?airCompanyID=4
+PATCH /airplanes/3/update/parameters?airCompanyID=4
 ```
 
 | Parameter | Type | Description |
