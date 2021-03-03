@@ -43,25 +43,26 @@ The application will be accessible from localhost:8001 on your browser or API Cl
 # REST API
 
 The REST API to the example app is described below.
-## Create airplane
+## Create Flight
 
 ### Request
 
 `
-POST /airplanes/?airCompanyID=1
+POST /flights/?airCompanyID=3&airplaneID=4
 `
 
 | Parameter | Type | Description |
 | :--- | :--- | :--- |
 | `airCompanyID` | `Long` | **Unique** company identifier |
+| `airplaneID` | `Long` | **Unique** airplane identifier |
 ### Body
 ```json
 {
-   "name": "ATR-42",
-   "typeAirplane": "PASSENGER",
-   "numberOfFlights": 1,
-   "flightDistance": 1950.0,
-   "fuelCapacity": 5730.0
+   "status": "PENDING",
+   "departureCountry": "UKRAINE",
+   "destinationCountry": "MONACO",
+   "estimatedFlightTime": "02:10:00",
+   "distance": 1300.94,
 }
 ```
 
